@@ -1,5 +1,7 @@
 package storage
 
+import "errors"
+
 type Storage interface {
 	// PUBLIC
 	Read(id string) ([]byte, error)
@@ -11,3 +13,8 @@ type Storage interface {
 	// PRIVATE
 	exists(id string) bool
 }
+
+var (
+	ErrFileNotFound = errors.New("file not found")
+	ErrFileExists   = errors.New("file with that id already exists")
+)
