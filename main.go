@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -22,13 +22,14 @@ func main() {
 
 		// articles
 		articlesRouter := app.Group("articles")
-		articlesRouter.Use(common.GetParamMiddleWare)
+		// middlewares
 		// TODO : create auth middleware
+		articlesRouter.Use(middlewares.GetParamMiddleWare)
 		{
 			articlesRouter.Get(":id", articles.GetArticle)
 			articlesRouter.Post(":id", articles.CreateArticle)
 			articlesRouter.Put(":id", articles.UpdateArticle)
-			articlesRouter.Delete(":id", articles.DeleteArtcile)
+			articlesRouter.Delete(":id", articles.DeleteArticle)
 		}
 
 		app.Listen(":8080")
