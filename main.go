@@ -21,15 +21,15 @@ func main() {
 		})
 
 		// articles
-		articlesRouter := app.Group("articles")
+		articlesRouter := app.Group("articles/:id")
 		// middlewares
-		// TODO : create auth middleware
-		articlesRouter.Use(middlewares.GetParamMiddleWare)
+		articlesRouter.Use(middlewares.GetParamMiddleware)
+		articlesRouter.Use(middlewares.AuthMiddleware)
 		{
-			articlesRouter.Get(":id", articles.GetArticle)
-			articlesRouter.Post(":id", articles.CreateArticle)
-			articlesRouter.Put(":id", articles.UpdateArticle)
-			articlesRouter.Delete(":id", articles.DeleteArticle)
+			articlesRouter.Get("", articles.GetArticle)
+			articlesRouter.Post("", articles.CreateArticle)
+			articlesRouter.Put("", articles.UpdateArticle)
+			articlesRouter.Delete("", articles.DeleteArticle)
 		}
 
 		app.Listen(":8080")

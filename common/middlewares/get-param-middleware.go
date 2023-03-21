@@ -6,10 +6,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetParamMiddleWare(c *fiber.Ctx) error {
-	var id string
-	if id = c.Params("id"); id == "" {
-		return fiber.NewError(http.StatusNotFound, "id should be valid")
+func GetParamMiddleware(c *fiber.Ctx) error {
+	var id int
+	var err error
+	if id, err = c.ParamsInt("id"); err != nil {
+		return fiber.NewError(http.StatusBadRequest, "id should be valid")
 	}
 	c.Locals("id", id)
 	return c.Next()
