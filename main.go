@@ -11,11 +11,11 @@ import (
 
 func main() {
 
-	// server
 	app := fiber.New()
 	app.Use(logger.New())
+
+	// routes
 	{
-		// route
 
 		// ping pong
 		app.Get("ping", func(c *fiber.Ctx) error {
@@ -24,7 +24,6 @@ func main() {
 
 		// articles
 		articlesRouter := app.Group("articles/:id")
-		// middlewares
 		articlesRouter.Use(middlewares.GetParamMiddleware)
 		articlesRouter.Use(middlewares.GetArticleInfoMiddleware)
 		articlesRouter.Use(middlewares.AuthMiddleware)
@@ -35,6 +34,7 @@ func main() {
 			articlesRouter.Delete("", articles.DeleteArticle)
 		}
 
-		app.Listen(":8080")
 	}
+
+	app.Listen(":8080")
 }
