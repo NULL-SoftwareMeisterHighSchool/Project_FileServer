@@ -6,12 +6,14 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
 
 	// server
 	app := fiber.New()
+	app.Use(logger.New())
 	{
 		// route
 
