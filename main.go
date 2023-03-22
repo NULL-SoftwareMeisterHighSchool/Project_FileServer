@@ -24,6 +24,7 @@ func main() {
 		articlesRouter := app.Group("articles/:id")
 		// middlewares
 		articlesRouter.Use(middlewares.GetParamMiddleware)
+		articlesRouter.Use(middlewares.GetArticleInfoMiddleware)
 		articlesRouter.Use(middlewares.AuthMiddleware)
 		{
 			articlesRouter.Get("", articles.GetArticle)

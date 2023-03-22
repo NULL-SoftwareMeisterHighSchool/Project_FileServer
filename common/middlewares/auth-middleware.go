@@ -9,16 +9,27 @@ import (
 )
 
 func AuthMiddleware(c *fiber.Ctx) error {
-	accessToken, err := getAccessFromHeader(c.GetReqHeaders())
-	if err != nil && c.Method() != "GET" {
+	isPubilc := c.Locals("isPublic").(bool)
+
+	if c.Method() == "GET" && isPubilc {
+		return c.Next()
+	}
+
+	var accessToken string
+	var err error
+	if accessToken, err = getAccessFromHeader(c.GetReqHeaders()); err != nil {
 		return err
 	}
 
 	// TODO : use websocket connection to authorize user
 	log.Println(accessToken)
-	c.Locals("author", "onee-only")
+	username := "onee-only"
+	author := c.Locals("author").(string)
+	if username != author {
+		return fiber.NewError(http.StatusForbidden, "author and requested user did not match")
+	}
 
-	return nil
+	return c.Next()
 }
 
 func getAccessFromHeader(header map[string]string) (string, error) {
