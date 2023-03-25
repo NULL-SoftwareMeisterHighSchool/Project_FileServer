@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -11,7 +13,14 @@ import (
 )
 
 func main() {
+	config.LoadEnv()
+	db.Connect()
 
+	app := initApp()
+	app.Listen(":8080")
+}
+
+func initApp() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
@@ -37,6 +46,5 @@ func main() {
 		}
 
 	}
-
-	app.Listen(":8080")
+	return app
 }
