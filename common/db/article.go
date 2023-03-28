@@ -2,14 +2,14 @@ package db
 
 import "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 
+const MAX_SUMMARY_LENGTH = 100
+
 type Article struct {
 	ID        uint     `json:"id"`
 	Summary   string   `json:"summary"`
 	Thumbnail string   `json:"thumbnail"`
 	Images    []string `json:"-"`
 }
-
-const MAX_SUMMARY_LENGTH = 100
 
 func (a *Article) SetSummaryFromBody(body []byte) {
 	plainText := util.SanitizeExceptPlainText(body)

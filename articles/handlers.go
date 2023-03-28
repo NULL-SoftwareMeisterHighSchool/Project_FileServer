@@ -9,15 +9,13 @@ import (
 )
 
 func GetArticle(c *fiber.Ctx) error {
-	id := c.Locals("id").(int)
-	author := c.Locals("author").(string)
+	id, author := getIdAndAuthor(c)
 
 	return c.SendFile(getArticlePath(author, id))
 }
 
 func CreateArticle(c *fiber.Ctx) error {
-	id := c.Locals("id").(int)
-	author := c.Locals("author").(string)
+	id, author := getIdAndAuthor(c)
 
 	articlePath := getArticlePath(author, id)
 	if articleExistsByPath(articlePath) {
@@ -33,8 +31,7 @@ func CreateArticle(c *fiber.Ctx) error {
 }
 
 func UpdateArticle(c *fiber.Ctx) error {
-	id := c.Locals("id").(int)
-	author := c.Locals("author").(string)
+	id, author := getIdAndAuthor(c)
 
 	articlePath := getArticlePath(author, id)
 	if !articleExistsByPath(articlePath) {
@@ -51,8 +48,7 @@ func UpdateArticle(c *fiber.Ctx) error {
 }
 
 func DeleteArticle(c *fiber.Ctx) error {
-	id := c.Locals("id").(int)
-	author := c.Locals("author").(string)
+	id, author := getIdAndAuthor(c)
 
 	articlePath := getArticlePath(author, id)
 	if err := os.Remove(articlePath); err != nil {

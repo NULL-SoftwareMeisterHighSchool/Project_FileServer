@@ -3,6 +3,8 @@ package articles
 import (
 	"fmt"
 	"os"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func getArticlePath(author string, id int) string {
@@ -12,4 +14,10 @@ func getArticlePath(author string, id int) string {
 func articleExistsByPath(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func getIdAndAuthor(c *fiber.Ctx) (id int, author string) {
+	id = c.Locals("id").(int)
+	author = c.Locals("author").(string)
+	return
 }
