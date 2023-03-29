@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
@@ -23,7 +22,7 @@ func GetArticle(c *fiber.Ctx) error {
 	}
 
 	return c.Status(http.StatusOK).SendStream(
-		bytes.NewReader(articleBytes), len(articleBytes)
+		bytes.NewReader(articleBytes), len(articleBytes),
 	)
 }
 
