@@ -11,11 +11,11 @@ import (
 
 type filesystem struct{}
 
-func (_ filesystem) ArticleExists(author string, id uint) bool {
+func (filesystem) ArticleExists(author string, id uint) bool {
 	return articleExistsByPath(getArticlePath(author, id))
 }
 
-func (_ filesystem) WriteArticle(author string, id uint, body []byte) *fiber.Error {
+func (filesystem) WriteArticle(author string, id uint, body []byte) *fiber.Error {
 	articlePath := getArticlePath(author, id)
 	if err := os.WriteFile(articlePath, body, 0666); err != nil {
 		return fiber.NewError(http.StatusInternalServerError, err.Error())
@@ -23,7 +23,7 @@ func (_ filesystem) WriteArticle(author string, id uint, body []byte) *fiber.Err
 	return nil
 }
 
-func (_ filesystem) GetArticle(author string, id uint) []byte {
+func (filesystem) GetArticle(author string, id uint) []byte {
 	articlePath := getArticlePath(author, id)
 	bytes, err := os.ReadFile(articlePath)
 	if err != nil {
@@ -32,14 +32,15 @@ func (_ filesystem) GetArticle(author string, id uint) []byte {
 	return bytes
 }
 
-func (_ filesystem) DeleteArticle(author string, id uint) *fiber.Error {
+func (filesystem) DeleteArticle(author string, id uint) *fiber.Error {
 	articlePath := getArticlePath(author, id)
 	if err := os.Remove(articlePath); err != nil {
 		return errors.NotFoundError
 	}
+	return nil
 }
 
-func (_ filesystem) DeleteImages(urls []string) {
+func (filesystem) DeleteImages(urls []string) {
 
 }
 
