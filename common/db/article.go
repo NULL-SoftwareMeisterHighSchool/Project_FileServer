@@ -11,17 +11,29 @@ type Article struct {
 	Images    []string `json:"-"`
 }
 
-func (a *Article) SetSummaryFromBody(body []byte) {
+func CreateArticleFromBody(body []byte) *Article {
+	article := new(Article)
+
+	article.setSummaryFromBody(body)
+	article.setImagesFromBody(body)
+	article.setThumbnail()
+
+	db.Create(article)
+
+	return article
+}
+
+func (a *Article) setSummaryFromBody(body []byte) {
 	plainText := util.SanitizeExceptPlainText(body)
 	minLength := util.GetMin(len(plainText), MAX_SUMMARY_LENGTH)
 	a.Summary = string(plainText[:minLength])
 }
 
-func (a *Article) SetImagesFromBody(body []byte) {
+func (a *Article) setImagesFromBody(body []byte) {
 	a.Images = util.ExtractImageURL(body)
 }
 
-func (a *Article) SetThumbnail() {
+func (a *Article) setThumbnail() {
 	if len(a.Images) == 0 {
 		a.Thumbnail = ""
 	} else {
