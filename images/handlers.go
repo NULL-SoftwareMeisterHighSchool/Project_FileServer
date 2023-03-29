@@ -1,19 +1,18 @@
-package middlewares
+package images
 
 import (
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/users"
 	"github.com/gofiber/fiber/v2"
 )
 
-func AuthMiddleware(c *fiber.Ctx) error {
-	isPubilc := c.Locals("isPublic").(bool)
+func GetImage(c *fiber.Ctx) error {
+	storage := storages.Get()
+}
 
-	if c.Method() == "GET" && isPubilc {
-		return c.Next()
-	}
-
+func UploadImage(c *fiber.Ctx) error {
+	// should improve this duplication
 	var accessToken string
 	var err error
 	if accessToken, err = util.ExtractAccessFromHeader(c.GetReqHeaders()); err != nil {
@@ -21,10 +20,6 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	username := users.GetUsernameFromToken(accessToken)
-	author := c.Locals("author").(string)
-	if username != author {
-		return errors.NoPermissionError
-	}
-
-	return c.Next()
+	storage := storages.Get()
+	
 }

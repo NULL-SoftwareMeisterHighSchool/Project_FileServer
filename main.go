@@ -7,6 +7,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/images"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -43,6 +44,13 @@ func initApp() *fiber.App {
 			articlesRouter.Post("", articles.CreateArticle)
 			articlesRouter.Put("", articles.UpdateArticle)
 			articlesRouter.Delete("", articles.DeleteArticle)
+		}
+
+		// images
+		imagesRouter := app.Group("images")
+		{
+			imagesRouter.Get("/:name", images.GetImage)
+			imagesRouter.Post("", images.UploadImage)
 		}
 
 	}
