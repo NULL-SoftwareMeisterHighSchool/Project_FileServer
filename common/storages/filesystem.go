@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/gofiber/fiber/v2"
@@ -40,8 +41,23 @@ func (filesystem) DeleteArticle(author string, id uint) *fiber.Error {
 	return nil
 }
 
-func (filesystem) DeleteImages(urls []string) {
+func (filesystem) DeleteImages(author string, suffixes []string) {
+	for _, suffix := range suffixes {
+		os.Remove(getImagePath(author, suffix))
+	}
+}
 
+func (filesystem) GetSuffixesFromURLs(urls []string) []string {
+	suffixes := []string{}
+	for _, url := range urls {
+		suffix := fmt.Sprint(strings.Split(url, "images/")[1])
+		suffixes = append(suffixes, suffix)
+	}
+	return suffixes
+}
+
+func getImagePath(author, suffix string) string {
+	return fmt.Sprintf("./contents/%s/images/%s", author, suffix)
 }
 
 func getArticlePath(author string, id uint) string {

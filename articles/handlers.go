@@ -53,10 +53,11 @@ func UpdateArticle(c *fiber.Ctx) error {
 	}
 
 	newArticle := db.CreateArticle(id, body)
-	imagesToDelete := util.GetDifferenceBetweenStrArr(
+	diff := util.GetDifferenceBetweenStrArr(
 		db.GetImageURLsByID(id), newArticle.Images,
 	)
-	storage.DeleteImages(imagesToDelete)
+	imagesToDelete := filterDeletableImageURLs(diff)
+	storage.DeleteImages(author, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.Save(newArticle)
 
 	if err := storage.WriteArticle(author, id, body); err != nil {
@@ -73,7 +74,8 @@ func DeleteArticle(c *fiber.Ctx) error {
 		return err
 	}
 
-	storage.DeleteImages(db.GetImageURLsByID(id))
+	imagesToDelete := filterDeletableImageURLs(db.GetImageURLsByID(id))
+	storage.DeleteImages(author, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)

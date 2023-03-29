@@ -15,6 +15,9 @@ func LoadEnv() {
 	DB_HOST = os.Getenv("DB_HOST")
 	DB_PASS = os.Getenv("DB_PASS")
 	DB_USER = os.Getenv("DB_USER")
+
+	// host
+	HOSTNAME = os.Getenv("HOSTNAME")
 }
 
 func loadDotEnv() {

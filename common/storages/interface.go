@@ -7,7 +7,8 @@ type Storage interface {
 	WriteArticle(author string, id uint, body []byte) *fiber.Error
 	GetArticle(author string, id uint) []byte
 	DeleteArticle(author string, id uint) *fiber.Error
-	DeleteImages(urls []string)
+	DeleteImages(author string, suffixes []string)
+	GetSuffixesFromURLs(urls []string) []string
 }
 
 var storage = &filesystem{}

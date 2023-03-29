@@ -6,3 +6,7 @@ var (
 	DB_PASS string
 	DB_HOST string
 )
+
+var (
+	HOSTNAME string
+)
