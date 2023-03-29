@@ -1,11 +1,11 @@
 package articles
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,9 +15,7 @@ func GetArticle(c *fiber.Ctx) error {
 
 	err := c.SendFile(getArticlePath(author, id))
 	if err != nil {
-		return fiber.NewError(
-			http.StatusNotFound, fmt.Sprintf("article with id: %d, author: %s not found", id, author),
-		)
+		return errors.NotFoundError
 	}
 	return nil
 }
@@ -27,11 +25,12 @@ func CreateArticle(c *fiber.Ctx) error {
 	articlePath := getArticlePath(author, id)
 
 	if articleExistsByPath(articlePath) {
-		return fiber.NewError(http.StatusConflict, "article already exists")
+		return errors.ConflictError
 	}
 
 	body := util.SanitizeXSS(c.Body())
-	article := db.CreateArticleFromBody(body)
+	article := db.CreateArticle(id, body)
+	db.Save(article)
 
 	if err := os.WriteFile(articlePath, body, 0666); err != nil {
 		return err
@@ -42,18 +41,20 @@ func CreateArticle(c *fiber.Ctx) error {
 func UpdateArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
 	articlePath := getArticlePath(author, id)
+	body := util.SanitizeXSS(c.Body())
 
 	if !articleExistsByPath(articlePath) {
-		return fiber.NewError(http.StatusConflict, "article does not exist")
+		return errors.NotFoundError
 	}
 
-	body := util.SanitizeXSS(c.Body())
+	article := db.CreateArticle(id, body)
+
 	if err := os.WriteFile(articlePath, body, 0666); err != nil {
 		return err
 	}
 
 	// TODO : should update article entity, and images
-	return c.SendStatus(http.StatusAccepted)
+	return c.Status(http.StatusOK).JSON()
 }
 
 func DeleteArticle(c *fiber.Ctx) error {
@@ -61,7 +62,7 @@ func DeleteArticle(c *fiber.Ctx) error {
 	articlePath := getArticlePath(author, id)
 
 	if err := os.Remove(articlePath); err != nil {
-		return fiber.NewError(http.StatusNotFound, "article does not exist")
+		return errors.NotFoundError
 	}
 	// TODO : should delete article entity, and images
 

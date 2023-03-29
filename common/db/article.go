@@ -11,16 +11,24 @@ type Article struct {
 	Images    []string `json:"-"`
 }
 
-func CreateArticleFromBody(body []byte) *Article {
+func Save(article *Article) {
+	db.Save(article)
+}
+
+// CreateArticle creates article from body. but doesn't save it
+func CreateArticle(id uint, body []byte) *Article {
 	article := new(Article)
 
-	article.setSummaryFromBody(body)
-	article.setImagesFromBody(body)
-	article.setThumbnail()
-
-	db.Create(article)
+	article.ID = id
+	article.setData(body)
 
 	return article
+}
+
+func (a *Article) setData(body []byte) {
+	a.setSummaryFromBody(body)
+	a.setImagesFromBody(body)
+	a.setThumbnail()
 }
 
 func (a *Article) setSummaryFromBody(body []byte) {
