@@ -1,30 +1,37 @@
 package articles
 
 import (
+	"bytes"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
+	storage := storages.Get()
 
-	err := c.SendFile(getArticlePath(author, id))
-	if err != nil {
+	articleBytes := storage.GetArticle(author, id)
+	if articleBytes == nil {
 		return errors.NotFoundError
 	}
-	return nil
+
+	return c.Status(http.StatusOK).SendStream(
+		bytes.NewReader(articleBytes), len(articleBytes)
+	)
 }
 
 func CreateArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
-	articlePath := getArticlePath(author, id)
+	storage := storages.Get()
 
-	if articleExistsByPath(articlePath) {
+	if storage.ArticleExists(author, id) {
 		return errors.ConflictError
 	}
 
@@ -32,39 +39,45 @@ func CreateArticle(c *fiber.Ctx) error {
 	article := db.CreateArticle(id, body)
 	db.Save(article)
 
-	if err := os.WriteFile(articlePath, body, 0666); err != nil {
+	if err := storage.WriteArticle(author, id, body); err != nil {
 		return err
 	}
-	return c.Status(http.StatusCreated).JSON(article)
+	return c.SendStatus(http.StatusCreated)
 }
 
 func UpdateArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
-	articlePath := getArticlePath(author, id)
+	storage := storages.Get()
 	body := util.SanitizeXSS(c.Body())
 
-	if !articleExistsByPath(articlePath) {
+	if !storage.ArticleExists(author, id) {
 		return errors.NotFoundError
 	}
 
-	article := db.CreateArticle(id, body)
+	newArticle := db.CreateArticle(id, body)
+	imagesToDelete := util.GetDifferenceBetweenStrArr(
+		db.GetImageURLsByID(id), newArticle.Images,
+	)
+	log.Println("imagesToDelete: ", imagesToDelete)
+	// TODO: delete images
+	db.Save(newArticle)
 
-	if err := os.WriteFile(articlePath, body, 0666); err != nil {
+	if err := storage.WriteArticle(author, id, body); err != nil {
 		return err
 	}
-
-	// TODO : should update article entity, and images
-	return c.Status(http.StatusOK).JSON()
+	return c.SendStatus(http.StatusOK)
 }
 
 func DeleteArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
-	articlePath := getArticlePath(author, id)
+	storage := storages.Get()
 
-	if err := os.Remove(articlePath); err != nil {
-		return errors.NotFoundError
+	if err := storage.DeleteArticle(author, id); err != nil {
+		return err
 	}
-	// TODO : should delete article entity, and images
+
+	// TODO : should delete image
+	db.DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)
 }

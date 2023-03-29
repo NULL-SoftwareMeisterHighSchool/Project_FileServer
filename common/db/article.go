@@ -25,6 +25,16 @@ func CreateArticle(id uint, body []byte) *Article {
 	return article
 }
 
+func DeleteByID(id uint) {
+	db.Where("id = ?", id).Delete(&Article{}, id)
+}
+
+func GetImageURLsByID(id uint) []string {
+	urls := []string{}
+	db.Where("id = ?", id).Select("images").Take(urls)
+	return urls
+}
+
 func (a *Article) setData(body []byte) {
 	a.setSummaryFromBody(body)
 	a.setImagesFromBody(body)
