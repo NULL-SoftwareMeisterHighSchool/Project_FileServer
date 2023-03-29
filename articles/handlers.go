@@ -2,7 +2,6 @@ package articles
 
 import (
 	"bytes"
-	"log"
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
@@ -57,8 +56,7 @@ func UpdateArticle(c *fiber.Ctx) error {
 	imagesToDelete := util.GetDifferenceBetweenStrArr(
 		db.GetImageURLsByID(id), newArticle.Images,
 	)
-	log.Println("imagesToDelete: ", imagesToDelete)
-	// TODO: delete images
+	storage.DeleteImages(imagesToDelete)
 	db.Save(newArticle)
 
 	if err := storage.WriteArticle(author, id, body); err != nil {
@@ -75,7 +73,7 @@ func DeleteArticle(c *fiber.Ctx) error {
 		return err
 	}
 
-	// TODO : should delete image
+	storage.DeleteImages(db.GetImageURLsByID(id))
 	db.DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)
