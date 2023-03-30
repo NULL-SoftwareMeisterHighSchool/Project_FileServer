@@ -1,8 +1,10 @@
 package errors
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,3 +15,11 @@ var NoPermissionError = fiber.NewError(http.StatusForbidden, "author and request
 var InvalidIDError = fiber.NewError(http.StatusBadRequest, "id should be valid")
 
 var ImageNotFoundError = fiber.NewError(http.StatusNotFound, "image does not exist")
+var InvalidImageExtensionError = fiber.NewError(
+	http.StatusUnsupportedMediaType,
+	fmt.Sprintf("allowed file extensions are: %v", config.IMAGE_EXTENSIONS),
+)
+
+func CreateUnkownErr(e error) *fiber.Error {
+	return fiber.NewError(http.StatusInternalServerError, e.Error())
+}

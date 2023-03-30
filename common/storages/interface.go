@@ -14,7 +14,7 @@ type Storage interface {
 	DeleteArticle(author string, id uint) *fiber.Error
 	DeleteImages(author string, suffixes []string)
 	GetSuffixesFromURLs(urls []string) []string
-	UploadImage(file *multipart.FileHeader) *fiber.Error
+	UploadImage(author ,name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
 var storage = &filesystem{}

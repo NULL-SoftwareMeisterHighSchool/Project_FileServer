@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/gofiber/fiber/v2"
 )
@@ -53,14 +54,29 @@ func (filesystem) DeleteImages(author string, suffixes []string) {
 func (filesystem) GetSuffixesFromURLs(urls []string) []string {
 	suffixes := []string{}
 	for _, url := range urls {
-		suffix := fmt.Sprint(strings.Split(url, "images/")[1])
+		splitted := strings.Split(url, "/")
+		suffix := splitted[len(splitted)-1]
 		suffixes = append(suffixes, suffix)
 	}
 	return suffixes
 }
 
-func (filesystem) UploadImage(file *multipart.FileHeader) *fiber.Error {
-	
+func (filesystem) UploadImage(author, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error) {
+	fullName := strings.Join([]string{name, extension}, ".")
+	path := getImagePath(author, fullName)
+
+	receivedFile, _ := fileHeader.Open()
+	defer receivedFile.Close()
+	createdFile, err := os.Create(path)
+	if err != nil {
+		return "", errors.CreateUnkownErr(err)
+	}
+	defer createdFile.Close()
+
+	if _, err = io.Copy(createdFile, receivedFile); err != nil {
+		return "", errors.CreateUnkownErr(err)
+	}
+	return getFSArticleURL(author, fullName), nil
 }
 
 func getImagePath(author, suffix string) string {
@@ -74,4 +90,8 @@ func getArticlePath(author string, id uint) string {
 func articleExistsByPath(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func getFSArticleURL(author, fullName string) string {
+	return fmt.Sprintf("%s/%s/%s", config.IMAGE_HOST_ENDPOINT, author, fullName)
 }

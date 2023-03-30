@@ -9,4 +9,5 @@ var (
 
 var (
 	IMAGE_HOST_ENDPOINT string
+	IMAGE_EXTENSIONS []string
 )

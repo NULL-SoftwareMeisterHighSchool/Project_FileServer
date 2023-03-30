@@ -7,6 +7,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 )
 
+// should dynamically change by config allowed extensions
 var imageLinkRegex = regexp.MustCompile(`(\!)?(\[.*\])(\((http)(?:s)?(\:\/\/).*(\.(jpg|png|gif|tiff|bmp))(?:(\s\"|\')(\w|\W|\d)*(\"|\'))?\))`)
 var imageRegex = regexp.MustCompile(`(http)(?:s)?(\:\/\/).*(\.(jpg|png|gif|tiff|bmp))`)
 

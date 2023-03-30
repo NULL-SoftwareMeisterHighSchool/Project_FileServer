@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -16,8 +17,9 @@ func LoadEnv() {
 	DB_PASS = os.Getenv("DB_PASS")
 	DB_USER = os.Getenv("DB_USER")
 
-	// image host
+	// image
 	IMAGE_HOST_ENDPOINT = os.Getenv("IMAGE_HOST_ENDPOINT")
+	IMAGE_EXTENSIONS = strings.Split(os.Getenv("IMAGE_EXTENSIONS"), ",")
 }
 
 func loadDotEnv() {

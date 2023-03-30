@@ -26,9 +26,15 @@ func UploadImage(c *fiber.Ctx) error {
 	
 	storage := storages.Get()
 	image, err := c.FormFile("image")
+	name, extension := getNameAndExtension(image.Filename)
 
-	if err := storage.UploadImage(image); err != nil {
+	if ok := checkExtension(extension); !ok {
+		return errors.InvalidImageExtensionError
+	}
+
+	var url string
+	if url, err = storage.UploadImage(username ,name, extension, image); err != nil {
 		return err
 	}
-	return c.SendStatus(http.StatusCreated)
+	return c.Status(http.StatusCreated).JSON(fiber.Map{"url": url})
 }
