@@ -1,6 +1,8 @@
 package images
 
 import (
+	"net/http"
+
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
@@ -10,6 +12,7 @@ import (
 
 func UploadImage(c *fiber.Ctx) error {
 	// should improve this duplication
+	
 	var accessToken string
 	var err error
 	if accessToken, err = util.ExtractAccessFromHeader(c.GetReqHeaders()); err != nil {
@@ -20,7 +23,12 @@ func UploadImage(c *fiber.Ctx) error {
 	if username == "" {
 		return errors.AuthFailedError
 	}
+	
 	storage := storages.Get()
-	
-	
+	image, err := c.FormFile("image")
+
+	if err := storage.UploadImage(image); err != nil {
+		return err
+	}
+	return c.SendStatus(http.StatusCreated)
 }

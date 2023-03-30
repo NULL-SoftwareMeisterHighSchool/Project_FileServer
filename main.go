@@ -48,6 +48,8 @@ func initApp() *fiber.App {
 
 		// images
 		app.Post("images", images.UploadImage)
+		// filesystem setting. can be deleted if it uses s3 or something.
+		app.Static("images", "./contents/images")
 
 	}
 	return app

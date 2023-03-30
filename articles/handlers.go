@@ -1,7 +1,6 @@
 package articles
 
 import (
-	"bytes"
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
@@ -15,14 +14,12 @@ func GetArticle(c *fiber.Ctx) error {
 	id, author := getIdAndAuthor(c)
 	storage := storages.Get()
 
-	articleBytes := storage.GetArticle(author, id)
-	if articleBytes == nil {
+	article, size := storage.GetArticle(author, id)
+	if article == nil {
 		return errors.ArticleNotFoundError
 	}
 
-	return c.Status(http.StatusOK).SendStream(
-		bytes.NewReader(articleBytes), len(articleBytes),
-	)
+	return c.Status(http.StatusOK).SendStream(article, int(size))
 }
 
 func CreateArticle(c *fiber.Ctx) error {

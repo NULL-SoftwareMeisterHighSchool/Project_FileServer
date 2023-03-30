@@ -2,6 +2,8 @@ package storages
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strings"
@@ -24,13 +26,14 @@ func (filesystem) WriteArticle(author string, id uint, body []byte) *fiber.Error
 	return nil
 }
 
-func (filesystem) GetArticle(author string, id uint) []byte {
+func (filesystem) GetArticle(author string, id uint) (io.Reader, int64) {
 	articlePath := getArticlePath(author, id)
-	bytes, err := os.ReadFile(articlePath)
+	file, err := os.Open(articlePath)
+	stat, err := file.Stat()
 	if err != nil {
-		return nil
+		return nil, -1
 	}
-	return bytes
+	return file, stat.Size()
 }
 
 func (filesystem) DeleteArticle(author string, id uint) *fiber.Error {
@@ -56,6 +59,9 @@ func (filesystem) GetSuffixesFromURLs(urls []string) []string {
 	return suffixes
 }
 
+func (filesystem) UploadImage(file *multipart.FileHeader) *fiber.Error {
+	
+}
 
 func getImagePath(author, suffix string) string {
 	return fmt.Sprintf("./contents/images/%s/%s", author, suffix)
