@@ -1,15 +1,12 @@
 package images
 
 import (
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/users"
 	"github.com/gofiber/fiber/v2"
 )
-
-func GetImage(c *fiber.Ctx) error {
-	storage := storages.Get()
-}
 
 func UploadImage(c *fiber.Ctx) error {
 	// should improve this duplication
@@ -20,6 +17,10 @@ func UploadImage(c *fiber.Ctx) error {
 	}
 
 	username := users.GetUsernameFromToken(accessToken)
+	if username == "" {
+		return errors.AuthFailedError
+	}
 	storage := storages.Get()
+	
 	
 }

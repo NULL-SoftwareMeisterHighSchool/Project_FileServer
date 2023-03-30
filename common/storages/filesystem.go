@@ -36,7 +36,7 @@ func (filesystem) GetArticle(author string, id uint) []byte {
 func (filesystem) DeleteArticle(author string, id uint) *fiber.Error {
 	articlePath := getArticlePath(author, id)
 	if err := os.Remove(articlePath); err != nil {
-		return errors.NotFoundError
+		return errors.ArticleNotFoundError
 	}
 	return nil
 }
@@ -56,12 +56,13 @@ func (filesystem) GetSuffixesFromURLs(urls []string) []string {
 	return suffixes
 }
 
+
 func getImagePath(author, suffix string) string {
-	return fmt.Sprintf("./contents/%s/images/%s", author, suffix)
+	return fmt.Sprintf("./contents/images/%s/%s", author, suffix)
 }
 
 func getArticlePath(author string, id uint) string {
-	return fmt.Sprintf("./contents/%s/articles/%d.md", author, id)
+	return fmt.Sprintf("./contents/articles/%s/%d.md", author, id)
 }
 
 func articleExistsByPath(path string) bool {

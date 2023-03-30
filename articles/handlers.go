@@ -17,7 +17,7 @@ func GetArticle(c *fiber.Ctx) error {
 
 	articleBytes := storage.GetArticle(author, id)
 	if articleBytes == nil {
-		return errors.NotFoundError
+		return errors.ArticleNotFoundError
 	}
 
 	return c.Status(http.StatusOK).SendStream(
@@ -49,7 +49,7 @@ func UpdateArticle(c *fiber.Ctx) error {
 	body := util.SanitizeXSS(c.Body())
 
 	if !storage.ArticleExists(author, id) {
-		return errors.NotFoundError
+		return errors.ArticleNotFoundError
 	}
 
 	newArticle := db.CreateArticle(id, body)

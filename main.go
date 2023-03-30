@@ -47,11 +47,7 @@ func initApp() *fiber.App {
 		}
 
 		// images
-		imagesRouter := app.Group("images")
-		{
-			imagesRouter.Get("/:name", images.GetImage)
-			imagesRouter.Post("", images.UploadImage)
-		}
+		app.Post("images", images.UploadImage)
 
 	}
 	return app

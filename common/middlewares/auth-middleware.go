@@ -21,6 +21,10 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	username := users.GetUsernameFromToken(accessToken)
+	if username == "" {
+		return errors.AuthFailedError
+	}
+
 	author := c.Locals("author").(string)
 	if username != author {
 		return errors.NoPermissionError

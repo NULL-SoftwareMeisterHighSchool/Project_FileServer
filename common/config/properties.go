@@ -8,5 +8,5 @@ var (
 )
 
 var (
-	HOSTNAME string
+	IMAGE_HOST_ENDPOINT string
 )

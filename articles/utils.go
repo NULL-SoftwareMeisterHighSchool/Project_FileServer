@@ -1,7 +1,6 @@
 package articles
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
@@ -17,7 +16,7 @@ func getIdAndAuthor(c *fiber.Ctx) (id uint, author string) {
 func filterDeletableImageURLs(urls []string) []string {
 	shouldDelete := []string{}
 	for _, url := range urls {
-		if strings.HasPrefix(url, fmt.Sprintf("https://%s/images/", config.HOSTNAME)) {
+		if strings.HasPrefix(url, config.IMAGE_HOST_ENDPOINT) {
 			shouldDelete = append(shouldDelete, url)
 		}
 	}
