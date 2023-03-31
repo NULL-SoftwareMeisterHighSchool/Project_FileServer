@@ -19,6 +19,7 @@ var InvalidImageExtensionError = fiber.NewError(
 	http.StatusUnsupportedMediaType,
 	fmt.Sprintf("allowed file extensions are: %v", config.IMAGE_EXTENSIONS),
 )
+var ImageNotReceived = fiber.NewError(http.StatusBadRequest, "image not received")
 
 func CreateUnkownErr(e error) *fiber.Error {
 	return fiber.NewError(http.StatusInternalServerError, e.Error())

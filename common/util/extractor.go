@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	"github.com/gofiber/fiber/v2"
 )
 
 // should dynamically change by config allowed extensions
@@ -22,7 +23,7 @@ func ExtractImageURL(body []byte) []string {
 	return extracted
 }
 
-func ExtractAccessFromHeader(header map[string]string) (string, error) {
+func ExtractAccessFromHeader(header map[string]string) (string, *fiber.Error) {
 	tokenRaw := header["Authorization"]
 	tokenArr := strings.Split(tokenRaw, " ")
 	if tokenArr[0] != "Bearer" || tokenArr[1] == "" {

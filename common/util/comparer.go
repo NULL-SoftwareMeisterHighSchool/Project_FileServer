@@ -1,7 +1,7 @@
 package util
 
 // compares two string arrays
-// and returns array of string which newArr doesn't have
+// and returns an array of string which newArr doesn't have
 func GetDifferenceBetweenStrArr(baseArr, newArr []string) []string {
 	var diff []string
 

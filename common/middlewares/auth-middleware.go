@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/users"
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,19 +13,14 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	var accessToken string
-	var err error
-	if accessToken, err = util.ExtractAccessFromHeader(c.GetReqHeaders()); err != nil {
+	var userID uint
+	var err *fiber.Error
+	if userID, err = users.GetUserIDFromHeader(c.GetReqHeaders()); err != nil {
 		return err
 	}
 
-	username := users.GetUsernameFromToken(accessToken)
-	if username == "" {
-		return errors.AuthFailedError
-	}
-
 	author := c.Locals("author").(string)
-	if username != author {
+	if userID != author {
 		return errors.NoPermissionError
 	}
 
