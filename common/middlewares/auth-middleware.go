@@ -19,8 +19,8 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		return err
 	}
 
-	author := c.Locals("author").(string)
-	if userID != author {
+	authorID := c.Locals("authorID").(uint)
+	if userID != authorID {
 		return errors.NoPermissionError
 	}
 

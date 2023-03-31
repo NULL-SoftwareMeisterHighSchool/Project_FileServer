@@ -8,13 +8,13 @@ import (
 )
 
 type Storage interface {
-	ArticleExists(author string, id uint) bool
-	WriteArticle(author string, id uint, body []byte) *fiber.Error
-	GetArticle(author string, id uint) (io.Reader, int64)
-	DeleteArticle(author string, id uint) *fiber.Error
-	DeleteImages(author string, suffixes []string)
+	ArticleExists(authorID uint, id uint) bool
+	WriteArticle(authorID uint, id uint, body []byte) *fiber.Error
+	GetArticle(authorID uint, id uint) (io.Reader, int64)
+	DeleteArticle(authorID uint, id uint) *fiber.Error
+	DeleteImages(authorID uint, suffixes []string)
 	GetSuffixesFromURLs(urls []string) []string
-	UploadImage(author ,name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
+	UploadImage(authorID uint, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
 var storage = &filesystem{}

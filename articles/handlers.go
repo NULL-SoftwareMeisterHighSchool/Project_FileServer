@@ -11,10 +11,10 @@ import (
 )
 
 func GetArticle(c *fiber.Ctx) error {
-	id, author := getIdAndAuthor(c)
+	id, authorID := getArticleIDAndAuthorID(c)
 	storage := storages.Get()
 
-	article, size := storage.GetArticle(author, id)
+	article, size := storage.GetArticle(authorID, id)
 	if article == nil {
 		return errors.ArticleNotFoundError
 	}
@@ -23,10 +23,10 @@ func GetArticle(c *fiber.Ctx) error {
 }
 
 func CreateArticle(c *fiber.Ctx) error {
-	id, author := getIdAndAuthor(c)
+	id, authorID := getArticleIDAndAuthorID(c)
 	storage := storages.Get()
 
-	if storage.ArticleExists(author, id) {
+	if storage.ArticleExists(authorID, id) {
 		return errors.ConflictError
 	}
 
@@ -34,18 +34,18 @@ func CreateArticle(c *fiber.Ctx) error {
 	article := db.CreateArticle(id, body)
 	db.Save(article)
 
-	if err := storage.WriteArticle(author, id, body); err != nil {
+	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
 	}
 	return c.SendStatus(http.StatusCreated)
 }
 
 func UpdateArticle(c *fiber.Ctx) error {
-	id, author := getIdAndAuthor(c)
+	id, authorID := getArticleIDAndAuthorID(c)
 	storage := storages.Get()
 	body := util.SanitizeXSS(c.Body())
 
-	if !storage.ArticleExists(author, id) {
+	if !storage.ArticleExists(authorID, id) {
 		return errors.ArticleNotFoundError
 	}
 
@@ -54,25 +54,25 @@ func UpdateArticle(c *fiber.Ctx) error {
 		db.GetImageURLsByID(id), newArticle.Images,
 	)
 	imagesToDelete := filterDeletableImageURLs(diff)
-	storage.DeleteImages(author, storage.GetSuffixesFromURLs(imagesToDelete))
+	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.Save(newArticle)
 
-	if err := storage.WriteArticle(author, id, body); err != nil {
+	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
 	}
 	return c.SendStatus(http.StatusOK)
 }
 
 func DeleteArticle(c *fiber.Ctx) error {
-	id, author := getIdAndAuthor(c)
+	id, authorID := getArticleIDAndAuthorID(c)
 	storage := storages.Get()
 
-	if err := storage.DeleteArticle(author, id); err != nil {
+	if err := storage.DeleteArticle(authorID, id); err != nil {
 		return err
 	}
 
 	imagesToDelete := filterDeletableImageURLs(db.GetImageURLsByID(id))
-	storage.DeleteImages(author, storage.GetSuffixesFromURLs(imagesToDelete))
+	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)

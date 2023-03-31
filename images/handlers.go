@@ -14,7 +14,7 @@ func UploadImage(c *fiber.Ctx) error {
 	var err *fiber.Error
 
 	var userID uint
-	if userID, err := users.GetUserIDFromHeader(c.GetReqHeaders()); err != nil {
+	if userID, err = users.GetUserIDFromHeader(c.GetReqHeaders()); err != nil {
 		return err
 	}
 
@@ -31,7 +31,7 @@ func UploadImage(c *fiber.Ctx) error {
 	}
 
 	var url string
-	if url, err = storage.UploadImage(username, name, extension, image); err != nil {
+	if url, err = storage.UploadImage(userID, name, extension, image); err != nil {
 		return err
 	}
 	return c.Status(http.StatusCreated).JSON(fiber.Map{"url": url})

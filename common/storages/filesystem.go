@@ -15,20 +15,20 @@ import (
 
 type filesystem struct{}
 
-func (filesystem) ArticleExists(author string, id uint) bool {
-	return articleExistsByPath(getArticlePath(author, id))
+func (filesystem) ArticleExists(authorID uint, id uint) bool {
+	return articleExistsByPath(getArticlePath(authorID, id))
 }
 
-func (filesystem) WriteArticle(author string, id uint, body []byte) *fiber.Error {
-	articlePath := getArticlePath(author, id)
+func (filesystem) WriteArticle(authorID uint, id uint, body []byte) *fiber.Error {
+	articlePath := getArticlePath(authorID, id)
 	if err := os.WriteFile(articlePath, body, 0666); err != nil {
 		return fiber.NewError(http.StatusInternalServerError, err.Error())
 	}
 	return nil
 }
 
-func (filesystem) GetArticle(author string, id uint) (io.Reader, int64) {
-	articlePath := getArticlePath(author, id)
+func (filesystem) GetArticle(authorID uint, id uint) (io.Reader, int64) {
+	articlePath := getArticlePath(authorID, id)
 	file, err := os.Open(articlePath)
 	stat, err := file.Stat()
 	if err != nil {
@@ -37,17 +37,17 @@ func (filesystem) GetArticle(author string, id uint) (io.Reader, int64) {
 	return file, stat.Size()
 }
 
-func (filesystem) DeleteArticle(author string, id uint) *fiber.Error {
-	articlePath := getArticlePath(author, id)
+func (filesystem) DeleteArticle(authorID uint, id uint) *fiber.Error {
+	articlePath := getArticlePath(authorID, id)
 	if err := os.Remove(articlePath); err != nil {
 		return errors.ArticleNotFoundError
 	}
 	return nil
 }
 
-func (filesystem) DeleteImages(author string, suffixes []string) {
+func (filesystem) DeleteImages(authorID uint, suffixes []string) {
 	for _, suffix := range suffixes {
-		os.Remove(getImagePath(author, suffix))
+		os.Remove(getImagePath(authorID, suffix))
 	}
 }
 
@@ -61,9 +61,9 @@ func (filesystem) GetSuffixesFromURLs(urls []string) []string {
 	return suffixes
 }
 
-func (filesystem) UploadImage(author, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error) {
+func (filesystem) UploadImage(authorID uint, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error) {
 	fullName := strings.Join([]string{name, extension}, ".")
-	path := getImagePath(author, fullName)
+	path := getImagePath(authorID, fullName)
 
 	receivedFile, _ := fileHeader.Open()
 	defer receivedFile.Close()
@@ -76,15 +76,15 @@ func (filesystem) UploadImage(author, name, extension string, fileHeader *multip
 	if _, err = io.Copy(createdFile, receivedFile); err != nil {
 		return "", errors.CreateUnkownErr(err)
 	}
-	return getFSArticleURL(author, fullName), nil
+	return getFSArticleURL(authorID, fullName), nil
 }
 
-func getImagePath(author, suffix string) string {
-	return fmt.Sprintf("./contents/images/%s/%s", author, suffix)
+func getImagePath(authorID uint, suffix string) string {
+	return fmt.Sprintf("./contents/images/%d/%s", authorID, suffix)
 }
 
-func getArticlePath(author string, id uint) string {
-	return fmt.Sprintf("./contents/articles/%s/%d.md", author, id)
+func getArticlePath(authorID uint, id uint) string {
+	return fmt.Sprintf("./contents/articles/%d/%d.md", authorID, id)
 }
 
 func articleExistsByPath(path string) bool {
@@ -92,6 +92,6 @@ func articleExistsByPath(path string) bool {
 	return err == nil
 }
 
-func getFSArticleURL(author, fullName string) string {
-	return fmt.Sprintf("%s/%s/%s", config.IMAGE_HOST_ENDPOINT, author, fullName)
+func getFSArticleURL(authorID uint, fullName string) string {
+	return fmt.Sprintf("%s/%d/%s", config.IMAGE_HOST_ENDPOINT, authorID, fullName)
 }
