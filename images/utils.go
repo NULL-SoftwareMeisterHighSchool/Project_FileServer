@@ -1,33 +1,20 @@
 package images
 
 import (
-	"fmt"
-	"math/rand"
 	"mime/multipart"
 	"strings"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 func getNameAndExtension(filename string) (name, extension string) {
 	splitted := strings.Split(filename, ".")
 	extension = splitted[len(splitted)-1]
-	name = createName()
+	name = util.CreateUUID()
 	return
-}
-
-func createName() string {
-	randHex := fmt.Sprintf("%x", rand.Uint64())
-	var runes []rune
-	for i, char := range randHex {
-		if i%4 == 0 && i != 0 {
-			runes = append(runes, '-')
-		}
-		runes = append(runes, char)
-	}
-	return string(runes)
 }
 
 func checkExtension(candidate string) bool {
