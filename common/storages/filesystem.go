@@ -29,7 +29,7 @@ func (filesystem) WriteArticle(authorID uint, id uint, body []byte) *fiber.Error
 
 func (filesystem) GetArticle(authorID uint, id uint) (io.Reader, int64) {
 	articlePath := getArticlePath(authorID, id)
-	file, err := os.Open(articlePath)
+	file, _ := os.Open(articlePath)
 	stat, err := file.Stat()
 	if err != nil {
 		return nil, -1
@@ -40,7 +40,7 @@ func (filesystem) GetArticle(authorID uint, id uint) (io.Reader, int64) {
 func (filesystem) DeleteArticle(authorID uint, id uint) *fiber.Error {
 	articlePath := getArticlePath(authorID, id)
 	if err := os.Remove(articlePath); err != nil {
-		return errors.ArticleNotFoundError
+		return errors.ErrArticleNotFound
 	}
 	return nil
 }

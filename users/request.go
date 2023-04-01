@@ -19,7 +19,7 @@ func GetUserIDFromHeader(header map[string]string) (uint, *fiber.Error) {
 	}
 	userID := getUserIDFromToken(accessToken)
 	if userID == 0 {
-		return 0, errors.AuthFailedError
+		return 0, errors.ErrAuthFailed
 	}
 	return userID, nil
 }

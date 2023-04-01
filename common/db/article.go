@@ -6,7 +6,7 @@ const MAX_SUMMARY_LENGTH = 100
 
 type Article struct {
 	ID        uint     `json:"id"`
-	AuthorID  uint     `json:"authorID"`
+	AuthorID  uint     `json:"authorId"`
 	Summary   string   `json:"summary"`
 	Thumbnail string   `json:"thumbnail"`
 	Images    []string `json:"-"`

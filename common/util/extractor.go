@@ -27,7 +27,7 @@ func ExtractAccessFromHeader(header map[string]string) (string, *fiber.Error) {
 	tokenRaw := header["Authorization"]
 	tokenArr := strings.Split(tokenRaw, " ")
 	if tokenArr[0] != "Bearer" || tokenArr[1] == "" {
-		return "", errors.AuthFailedError
+		return "", errors.ErrAuthFailed
 	}
 	return tokenArr[1], nil
 }

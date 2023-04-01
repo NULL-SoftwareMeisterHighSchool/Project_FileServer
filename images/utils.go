@@ -29,7 +29,7 @@ func checkExtension(candidate string) bool {
 func getImageFromFormFile(c *fiber.Ctx) (*multipart.FileHeader, *fiber.Error) {
 	image, err := c.FormFile("image")
 	if err != nil {
-		return nil, errors.ImageNotReceived
+		return nil, errors.ErrImageNotReceived
 	}
 	return image, nil
 }

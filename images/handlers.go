@@ -27,7 +27,7 @@ func UploadImage(c *fiber.Ctx) error {
 
 	name, extension := getNameAndExtension(image.Filename)
 	if ok := checkExtension(extension); !ok {
-		return errors.InvalidImageExtensionError
+		return errors.ErrInvalidImageExtension
 	}
 
 	var url string
