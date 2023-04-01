@@ -31,7 +31,7 @@ func CreateArticle(c *fiber.Ctx) error {
 	}
 
 	body := util.SanitizeXSS(c.Body())
-	article := db.CreateArticle(id, body)
+	article := db.CreateArticle(id, authorID, body)
 	db.Save(article)
 
 	if err := storage.WriteArticle(authorID, id, body); err != nil {
@@ -49,7 +49,7 @@ func UpdateArticle(c *fiber.Ctx) error {
 		return errors.ArticleNotFoundError
 	}
 
-	newArticle := db.CreateArticle(id, body)
+	newArticle := db.CreateArticle(id, authorID, body)
 	diff := util.GetDifferenceBetweenStrArr(
 		db.GetImageURLsByID(id), newArticle.Images,
 	)

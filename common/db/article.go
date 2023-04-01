@@ -6,6 +6,7 @@ const MAX_SUMMARY_LENGTH = 100
 
 type Article struct {
 	ID        uint     `json:"id"`
+	AuthorID  uint     `json:"authorID"`
 	Summary   string   `json:"summary"`
 	Thumbnail string   `json:"thumbnail"`
 	Images    []string `json:"-"`
@@ -16,17 +17,18 @@ func Save(article *Article) {
 }
 
 // CreateArticle creates article from body. but doesn't save it
-func CreateArticle(id uint, body []byte) *Article {
+func CreateArticle(articleID, authorID uint, body []byte) *Article {
 	article := new(Article)
-
-	article.ID = id
-	article.setData(body)
-
+	article.setData(articleID, authorID, body)
 	return article
 }
 
 func DeleteByID(id uint) {
-	db.Where("id = ?", id).Delete(&Article{}, id)
+	db.Where("id = ?", id).Delete(&Article{})
+}
+
+func DeleteByAuthorID(authorID uint) {
+	db.Where("userId = ?", authorID).Delete(&Article{})
 }
 
 func GetImageURLsByID(id uint) []string {
@@ -35,10 +37,16 @@ func GetImageURLsByID(id uint) []string {
 	return urls
 }
 
-func (a *Article) setData(body []byte) {
+func (a *Article) setData(articleID, authorID uint, body []byte) {
+	a.setIDs(articleID, authorID)
 	a.setSummaryFromBody(body)
 	a.setImagesFromBody(body)
 	a.setThumbnail()
+}
+
+func (a *Article) setIDs(articleID, authorID uint) {
+	a.ID = articleID
+	a.AuthorID = authorID
 }
 
 func (a *Article) setSummaryFromBody(body []byte) {
