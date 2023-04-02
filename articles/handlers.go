@@ -16,7 +16,8 @@ func GetArticleInfo(c *fiber.Ctx) error {
 		return errors.ErrInvalidID
 	}
 
-	
+	articles := db.GetArticleInfoByIDs(ids)
+	return c.Status(http.StatusOK).JSON(articles)
 }
 
 func GetArticle(c *fiber.Ctx) error {

@@ -37,6 +37,17 @@ func GetImageURLsByID(id uint) []string {
 	return urls
 }
 
+func GetArticleInfoByIDs(ids []uint) []*Article {
+	var articles []*Article
+	db.
+		Where("id IN ?", ids).
+		Omit("images").
+		Find(&articles).
+		Order("id")
+
+	return articles
+}
+
 func (a *Article) setData(articleID, authorID uint, body []byte) {
 	a.setIDs(articleID, authorID)
 	a.setSummaryFromBody(body)
