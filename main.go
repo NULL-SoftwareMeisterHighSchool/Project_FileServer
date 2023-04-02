@@ -35,15 +35,19 @@ func initApp() *fiber.App {
 		})
 
 		// articles
-		articlesRouter := app.Group("articles/:id")
-		articlesRouter.Use(middlewares.GetParamMiddleware)
-		articlesRouter.Use(middlewares.GetArticleInfoMiddleware)
-		articlesRouter.Use(middlewares.AuthMiddleware)
+		articlesRouter := app.Group("articles")
+		articlesRouter.Get("", articles.GetArticleInfo)
+
+		articleRouter := articlesRouter.Group(":id")
 		{
-			articlesRouter.Get("", articles.GetArticle)
-			articlesRouter.Post("", articles.CreateArticle)
-			articlesRouter.Put("", articles.UpdateArticle)
-			articlesRouter.Delete("", articles.DeleteArticle)
+			articleRouter.Use(middlewares.GetParamMiddleware)
+			articleRouter.Use(middlewares.GetArticleInfoMiddleware)
+			articleRouter.Use(middlewares.AuthMiddleware)
+
+			articleRouter.Get("", articles.GetArticle)
+			articleRouter.Post("", articles.CreateArticle)
+			articleRouter.Put("", articles.UpdateArticle)
+			articleRouter.Delete("", articles.DeleteArticle)
 		}
 
 		// images

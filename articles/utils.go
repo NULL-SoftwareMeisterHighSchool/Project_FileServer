@@ -1,6 +1,7 @@
 package articles
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
@@ -21,4 +22,17 @@ func filterDeletableImageURLs(urls []string) []string {
 		}
 	}
 	return shouldDelete
+}
+
+func getIdsFromQuery(idArrStr string) []uint {
+	var ids []uint
+	idArr := strings.Split(idArrStr, ",")
+	for _, idStr := range idArr {
+		id, err := strconv.ParseUint(idStr, 10, 32)
+		if err != nil {
+			return make([]uint, 0)
+		}
+		ids = append(ids, uint(id))
+	}
+	return ids
 }

@@ -10,6 +10,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func GetArticleInfo(c *fiber.Ctx) error {
+	ids := getIdsFromQuery(c.Query("ids"))
+	if len(ids) == 0 {
+		return errors.ErrInvalidID
+	}
+
+	
+}
+
 func GetArticle(c *fiber.Ctx) error {
 	id, authorID := getArticleIDAndAuthorID(c)
 	storage := storages.Get()
