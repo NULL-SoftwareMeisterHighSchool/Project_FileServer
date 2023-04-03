@@ -20,6 +20,9 @@ func LoadEnv() {
 	// image
 	IMAGE_HOST_ENDPOINT = os.Getenv("IMAGE_HOST_ENDPOINT")
 	IMAGE_EXTENSIONS = strings.Split(os.Getenv("IMAGE_EXTENSIONS"), ",")
+
+	// websocket
+	WS_REQUEST_ORIGIN = os.Getenv("WS_REQUEST_ORIGIN")
 }
 
 func loadDotEnv() {

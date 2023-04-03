@@ -9,5 +9,9 @@ var (
 
 var (
 	IMAGE_HOST_ENDPOINT string
-	IMAGE_EXTENSIONS []string
+	IMAGE_EXTENSIONS    []string
+)
+
+var (
+	WS_REQUEST_ORIGIN string
 )

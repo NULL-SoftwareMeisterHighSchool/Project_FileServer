@@ -21,6 +21,8 @@ var ErrInvalidImageExtension = fiber.NewError(
 )
 var ErrImageNotReceived = fiber.NewError(http.StatusBadRequest, "image not received")
 
+var ErrInvalidOrigin = fiber.NewError(http.StatusForbidden, "request origin is not valid")
+
 func CreateUnkownErr(e error) *fiber.Error {
 	return fiber.NewError(http.StatusInternalServerError, e.Error())
 }

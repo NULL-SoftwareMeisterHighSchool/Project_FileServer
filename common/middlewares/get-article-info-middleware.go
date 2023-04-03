@@ -1,12 +1,16 @@
 package middlewares
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/ws"
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetArticleInfoMiddleware(c *fiber.Ctx) error {
-	// TODO : get article info
-	var authorID uint = 1
-	isPublic := false
-	c.Locals("authorID", authorID)
-	c.Locals("isPublic", isPublic)
+	articleInfo, err := ws.GetArticleInfoByID(c.Locals("id").(uint))
+	if err != nil {
+		return err
+	}
+	c.Locals("authorID", articleInfo.AuthorID)
+	c.Locals("isPublic", articleInfo.IsPublic)
 	return c.Next()
 }
