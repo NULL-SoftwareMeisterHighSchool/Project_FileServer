@@ -6,18 +6,12 @@ import (
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/users"
 	"github.com/gofiber/fiber/v2"
 )
 
 func UploadImage(c *fiber.Ctx) error {
 	var err *fiber.Error
-
-	var userID uint
-	if userID, err = users.GetUserIDFromHeader(c.GetReqHeaders()); err != nil {
-		return err
-	}
-
+	userID := c.Locals("userID").(uint)
 	storage := storages.Get()
 
 	var image *multipart.FileHeader

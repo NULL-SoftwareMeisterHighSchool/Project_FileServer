@@ -49,7 +49,8 @@ func initApp() *fiber.App {
 		{
 			articleRouter.Use(middlewares.GetParamMiddleware)
 			articleRouter.Use(middlewares.GetArticleInfoMiddleware)
-			articleRouter.Use(middlewares.AuthMiddleware)
+			articleRouter.Use(middlewares.AuthorizeMiddleware)
+			articleRouter.Use(middlewares.AuthenticateMiddleware)
 
 			articleRouter.Get("", articles.GetArticle)
 			articleRouter.Post("", articles.CreateArticle)
@@ -58,9 +59,16 @@ func initApp() *fiber.App {
 		}
 
 		// images
-		app.Post("images", images.UploadImage)
-		// filesystem setting. can be deleted if it uses s3 or something.
-		app.Static("images", "./contents/images")
+		imagesRouter := app.Group("images")
+		{
+			imagesRouter.Post("",
+				middlewares.SetPublicTrue,
+				middlewares.AuthorizeMiddleware,
+				images.UploadImage,
+			)
+			// filesystem setting. can be deleted if it uses s3 or something.
+			imagesRouter.Static("", "./contents/images")
+		}
 
 	}
 	return app
