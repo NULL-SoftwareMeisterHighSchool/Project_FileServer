@@ -6,6 +6,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/images"
 	"github.com/gofiber/fiber/v2"
@@ -22,7 +23,13 @@ func main() {
 }
 
 func initApp() *fiber.App {
-	app := fiber.New()
+
+	// config
+	config := fiber.Config{
+		ErrorHandler: errors.CustomErrorHandler,
+	}
+
+	app := fiber.New(config)
 	app.Use(logger.New())
 	app.Use(recover.New())
 
