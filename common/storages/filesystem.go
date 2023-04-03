@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
-	"net/http"
 	"os"
 	"strings"
 
@@ -22,7 +21,7 @@ func (filesystem) ArticleExists(authorID uint, id uint) bool {
 func (filesystem) WriteArticle(authorID uint, id uint, body []byte) *fiber.Error {
 	articlePath := getArticlePath(authorID, id)
 	if err := os.WriteFile(articlePath, body, 0666); err != nil {
-		return fiber.NewError(http.StatusInternalServerError, err.Error())
+		return errors.CreateUnkownErr(err)
 	}
 	return nil
 }
