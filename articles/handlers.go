@@ -3,6 +3,7 @@ package articles
 import (
 	"net/http"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
@@ -63,7 +64,7 @@ func UpdateArticle(c *fiber.Ctx) error {
 	diff := util.GetDifferenceBetweenStrArr(
 		db.GetImageURLsByID(id), newArticle.Images,
 	)
-	imagesToDelete := filterDeletableImageURLs(diff)
+	imagesToDelete := filterDeletableImageURLByEndpoint(diff, config.IMAGE_HOST_ENDPOINT)
 	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.Save(newArticle)
 
@@ -81,7 +82,9 @@ func DeleteArticle(c *fiber.Ctx) error {
 		return err
 	}
 
-	imagesToDelete := filterDeletableImageURLs(db.GetImageURLsByID(id))
+	imagesToDelete := filterDeletableImageURLByEndpoint(
+		db.GetImageURLsByID(id), config.IMAGE_HOST_ENDPOINT,
+	)
 	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
 	db.DeleteByID(id)
 

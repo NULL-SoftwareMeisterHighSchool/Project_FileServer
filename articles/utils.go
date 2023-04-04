@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,10 +13,10 @@ func getArticleIDAndAuthorID(c *fiber.Ctx) (id uint, authorID uint) {
 	return
 }
 
-func filterDeletableImageURLs(urls []string) []string {
+func filterDeletableImageURLByEndpoint(urls []string, endpoint string) []string {
 	shouldDelete := []string{}
 	for _, url := range urls {
-		if strings.HasPrefix(url, config.IMAGE_HOST_ENDPOINT) {
+		if strings.HasPrefix(url, endpoint) {
 			shouldDelete = append(shouldDelete, url)
 		}
 	}
