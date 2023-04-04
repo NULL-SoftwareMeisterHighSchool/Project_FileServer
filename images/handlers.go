@@ -4,6 +4,7 @@ import (
 	"mime/multipart"
 	"net/http"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/gofiber/fiber/v2"
@@ -20,7 +21,7 @@ func UploadImage(c *fiber.Ctx) error {
 	}
 
 	name, extension := getNameAndExtension(image.Filename)
-	if ok := checkExtension(extension); !ok {
+	if ok := checkExtension(extension, config.IMAGE_EXTENSIONS); !ok {
 		return errors.ErrInvalidImageExtension
 	}
 
