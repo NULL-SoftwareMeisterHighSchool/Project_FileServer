@@ -17,6 +17,8 @@ var markdown = regexp.MustCompile(strings.Join([]string{
 	"(\\`{3}\\n+)(.*)(\\n+\\`{3})",              // code block
 	`(\=|\-|\*){3}`,                             // horizontal line
 	`(((\|)([a-zA-Z\d+\s#!@'"():;\\\/.\[\]\^<={$}>?(?!-))]+))+(\|))(?:\n)?((\|)(-+))+(\|)(\n)((\|)(\W+|\w+|\S+))+(\|$)`, // TABLE
+	`\n`,
+	`\t`,
 }, "|"))
 
 func SanitizeXSS(body []byte) []byte {
@@ -25,5 +27,6 @@ func SanitizeXSS(body []byte) []byte {
 
 func SanitizeExceptPlainText(body []byte) []byte {
 	withoutHTML := strict.SanitizeBytes(body)
-	return markdown.ReplaceAll(withoutHTML, []byte(""))
+	withoutHTML = markdown.ReplaceAll(withoutHTML, nil)
+	return withoutHTML
 }

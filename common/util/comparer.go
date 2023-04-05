@@ -1,17 +1,17 @@
 package util
 
 // compares two string arrays
-// and returns an array of string which newArr doesn't have
-func GetDifferenceBetweenStrArr(baseArr, newArr []string) []string {
+// and returns an array of string which arr1 doesn't have
+func GetDifferenceBetweenStrArr(arr1, arr2 []string) []string {
 	var diff []string
 
-	newArrMap := make(map[string]bool)
-	for _, str := range newArr {
-		newArrMap[str] = true
+	arr1Map := make(map[string]bool)
+	for _, str := range arr1 {
+		arr1Map[str] = true
 	}
 
-	for _, str := range baseArr {
-		if _, contains := newArrMap[str]; !contains {
+	for _, str := range arr2 {
+		if _, contains := arr1Map[str]; !contains {
 			diff = append(diff, str)
 		}
 	}
