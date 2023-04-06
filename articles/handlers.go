@@ -43,7 +43,7 @@ func CreateArticle(c *fiber.Ctx) error {
 
 	body := util.SanitizeXSS(c.Body())
 	article := db.CreateArticle(id, authorID, body)
-	db.Save(article)
+	go db.Save(article)
 
 	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
@@ -65,8 +65,8 @@ func UpdateArticle(c *fiber.Ctx) error {
 		db.GetImageURLsByID(id), newArticle.Images,
 	)
 	imagesToDelete := filterDeletableImageURLByEndpoint(diff, config.IMAGE_HOST_ENDPOINT)
-	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
-	db.Save(newArticle)
+	go storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
+	go db.Save(newArticle)
 
 	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
@@ -85,8 +85,8 @@ func DeleteArticle(c *fiber.Ctx) error {
 	imagesToDelete := filterDeletableImageURLByEndpoint(
 		db.GetImageURLsByID(id), config.IMAGE_HOST_ENDPOINT,
 	)
-	storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
-	db.DeleteByID(id)
+	go storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
+	go db.DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)
 }
