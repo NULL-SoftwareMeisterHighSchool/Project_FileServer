@@ -16,13 +16,13 @@ func Connect(c *websocket.Conn) {
 func read(c *websocket.Conn) {
 	defer c.Close()
 	for {
-		c.ReadJSON()
+		// c.ReadJSON()
 	}
 }
 
 func write(c *websocket.Conn) {
 	defer c.Close()
 	for {
-		c.WriteJSON()
+		// c.WriteJSON()
 	}
 }
