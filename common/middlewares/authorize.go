@@ -1,9 +1,9 @@
 package middlewares
 
 import (
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/ws"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/ws"
 	"github.com/gofiber/fiber/v2"
 )
 

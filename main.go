@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/ws"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/images"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/ws"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
