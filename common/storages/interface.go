@@ -4,6 +4,7 @@ import (
 	"io"
 	"mime/multipart"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages/filesystem"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,7 +18,7 @@ type Storage interface {
 	UploadImage(authorID uint, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
-var storage = &filesystem{}
+var storage Storage = filesystem.Get()
 
 func Get() Storage {
 	return storage
