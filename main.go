@@ -4,12 +4,13 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/ws"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/images"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/rank"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -19,6 +20,7 @@ import (
 func main() {
 	config.LoadEnv()
 	db.Connect()
+	rank.InitCron()
 
 	app := initApp()
 	app.Listen(":8080")
@@ -44,7 +46,7 @@ func initApp() *fiber.App {
 		})
 
 		// websocket
-		app.Get("ws", middlewares.CheckOriginMiddleware, websocket.New(ws.Connect))
+		app.Get("ws", middlewares.CheckOriginMiddleware, websocket.New(core.Connect))
 
 		// articles
 		articlesRouter := app.Group("articles")

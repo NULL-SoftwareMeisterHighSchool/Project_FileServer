@@ -1,4 +1,4 @@
-package ws
+package core
 
 import (
 	"github.com/gofiber/websocket/v2"
