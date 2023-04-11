@@ -15,3 +15,7 @@ var (
 var (
 	WS_REQUEST_ORIGIN string
 )
+
+var (
+	GH_TOKEN string
+)

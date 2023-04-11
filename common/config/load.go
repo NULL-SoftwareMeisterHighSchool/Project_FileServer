@@ -23,6 +23,9 @@ func LoadEnv() {
 
 	// websocket
 	WS_REQUEST_ORIGIN = os.Getenv("WS_REQUEST_ORIGIN")
+
+	// github api
+	GH_TOKEN = os.Getenv("GH_TOKEN")
 }
 
 func loadDotEnv() {
