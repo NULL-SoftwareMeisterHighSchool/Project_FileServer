@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/core/client"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
 )
@@ -21,7 +21,7 @@ func AuthorizeMiddleware(c *fiber.Ctx) error {
 	}
 
 	var userID uint
-	if userID = core_client.Get().GetUserIDFromToken(accessToken); userID == 0 {
+	if userID = core_client.GetUserIDFromToken(accessToken); userID == 0 {
 		return errors.ErrAuthFailed
 	}
 

@@ -1,12 +1,12 @@
 package middlewares
 
 import (
-	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
+	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/core/client"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticleInfoMiddleware(c *fiber.Ctx) error {
-	articleInfo, err := core_client.Get().GetArticleInfoByID(c.Locals("id").(uint))
+	articleInfo, err := core_client.GetArticleInfoByID(c.Locals("id").(uint))
 	if err != nil {
 		return err
 	}
