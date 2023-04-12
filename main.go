@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
-	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
@@ -14,7 +13,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/websocket/v2"
 )
 
 func main() {
@@ -44,9 +42,6 @@ func initApp() *fiber.App {
 		app.Get("ping", func(c *fiber.Ctx) error {
 			return c.Status(http.StatusOK).JSON(fiber.Map{"message": "pong"})
 		})
-
-		// websocket
-		app.Get("ws", middlewares.CheckOriginMiddleware, websocket.New(core_client.Connect))
 
 		// articles
 		articlesRouter := app.Group("articles")

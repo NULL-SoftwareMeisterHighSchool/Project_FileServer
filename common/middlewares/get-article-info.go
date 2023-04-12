@@ -6,7 +6,7 @@ import (
 )
 
 func GetArticleInfoMiddleware(c *fiber.Ctx) error {
-	articleInfo, err := core_client.GetArticleInfoByID(c.Locals("id").(uint))
+	articleInfo, err := core_client.Get().GetArticleInfoByID(c.Locals("id").(uint))
 	if err != nil {
 		return err
 	}

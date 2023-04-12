@@ -21,7 +21,7 @@ func AuthorizeMiddleware(c *fiber.Ctx) error {
 	}
 
 	var userID uint
-	if userID = core_client.RequestUserIDFromToken(accessToken); userID == 0 {
+	if userID = core_client.Get().GetUserIDFromToken(accessToken); userID == 0 {
 		return errors.ErrAuthFailed
 	}
 
