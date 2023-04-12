@@ -11,6 +11,9 @@ import (
 func LoadEnv() {
 	loadDotEnv()
 
+	// rest api
+	REST_PORT = os.Getenv("REST_PORT")
+
 	// database
 	DB_NAME = os.Getenv("DB_NAME")
 	DB_HOST = os.Getenv("DB_HOST")
@@ -20,9 +23,6 @@ func LoadEnv() {
 	// image
 	IMAGE_HOST_ENDPOINT = os.Getenv("IMAGE_HOST_ENDPOINT")
 	IMAGE_EXTENSIONS = strings.Split(os.Getenv("IMAGE_EXTENSIONS"), ",")
-
-	// websocket
-	WS_REQUEST_ORIGIN = os.Getenv("WS_REQUEST_ORIGIN")
 
 	// github api
 	GH_TOKEN = os.Getenv("GH_TOKEN")

@@ -1,6 +1,10 @@
 package config
 
 var (
+	REST_PORT string
+)
+
+var (
 	DB_NAME string
 	DB_USER string
 	DB_PASS string

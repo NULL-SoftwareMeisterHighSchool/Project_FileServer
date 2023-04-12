@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest"
@@ -13,5 +15,5 @@ func main() {
 	schedule.InitCron()
 
 	app := rest.InitApp()
-	app.Listen(":8080")
+	app.Listen(fmt.Sprintf(":%s", config.REST_PORT))
 }
