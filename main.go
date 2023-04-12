@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/articles"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
+	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/client/core"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
@@ -46,7 +46,7 @@ func initApp() *fiber.App {
 		})
 
 		// websocket
-		app.Get("ws", middlewares.CheckOriginMiddleware, websocket.New(core.Connect))
+		app.Get("ws", middlewares.CheckOriginMiddleware, websocket.New(core_client.Connect))
 
 		// articles
 		articlesRouter := app.Group("articles")

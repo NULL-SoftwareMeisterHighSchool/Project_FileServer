@@ -1,4 +1,4 @@
-package core
+package core_client
 
 import (
 	"github.com/gofiber/websocket/v2"
