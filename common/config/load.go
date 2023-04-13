@@ -14,6 +14,9 @@ func LoadEnv() {
 	// rest api
 	REST_PORT = os.Getenv("REST_PORT")
 
+	// grpc server
+	GRPC_PORT = os.Getenv("GRPC_PORT")
+
 	// database
 	DB_NAME = os.Getenv("DB_NAME")
 	DB_HOST = os.Getenv("DB_HOST")
