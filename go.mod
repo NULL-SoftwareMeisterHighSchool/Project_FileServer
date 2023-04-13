@@ -8,7 +8,6 @@ require (
 	github.com/hasura/go-graphql-client v0.9.2
 	github.com/joho/godotenv v1.5.1
 	github.com/microcosm-cc/bluemonday v1.0.23
-	github.com/robfig/cron v1.2.0
 	golang.org/x/oauth2 v0.7.0
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gorm v1.24.6
