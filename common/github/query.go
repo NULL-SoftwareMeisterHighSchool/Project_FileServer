@@ -2,6 +2,7 @@ package github_client
 
 import (
 	"context"
+	"log"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func GetUserJoinedAt(login string) time.Time {
 
 	var query queryGetUserJoinedAt
 	if err := client.Query(context.Background(), &query, variables); err != nil {
-		panic(err)
+		log.Fatalf("failed to send query: %s", err)
 	}
 
 	return query.User.CreatedAt
