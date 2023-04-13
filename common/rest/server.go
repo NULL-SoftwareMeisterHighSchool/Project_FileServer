@@ -1,8 +1,10 @@
-package rest
+package rest_server
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles"
@@ -12,14 +14,14 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func InitApp() *fiber.App {
+func Listen() {
 
 	// config
-	config := fiber.Config{
+	appConfig := fiber.Config{
 		ErrorHandler: errors.CustomErrorHandler,
 	}
 
-	app := fiber.New(config)
+	app := fiber.New(appConfig)
 	app.Use(logger.New())
 	app.Use(recover.New())
 
@@ -61,5 +63,5 @@ func InitApp() *fiber.App {
 		}
 
 	}
-	return app
+	app.Listen(fmt.Sprintf(":%s", config.REST_PORT))
 }

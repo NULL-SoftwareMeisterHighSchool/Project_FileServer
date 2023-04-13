@@ -1,17 +1,15 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest"
+	grpc_server "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server"
+	rest_server "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest"
 )
 
 func main() {
 	config.LoadEnv()
 	db.Connect()
-
-	app := rest.InitApp()
-	app.Listen(fmt.Sprintf(":%s", config.REST_PORT))
+	go grpc_server.Listen()
+	rest_server.Listen()
 }
