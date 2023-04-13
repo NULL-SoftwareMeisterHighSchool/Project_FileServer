@@ -7,7 +7,7 @@ import (
 
 const isoLayout = "2006-01-02T15:04:05-0700"
 
-func GetUserContributionCount(login string, from *time.Time, to *time.Time) int {
+func GetUserContributionCount(login string, from, to *time.Time) int {
 	client := getClient()
 
 	variables := map[string]interface{}{
@@ -20,7 +20,7 @@ func GetUserContributionCount(login string, from *time.Time, to *time.Time) int 
 	if err := client.Query(context.Background(), &query, variables); err != nil {
 		panic(err)
 	}
-	
+
 	return query.
 		User.
 		ContributionsCollection.
@@ -28,7 +28,7 @@ func GetUserContributionCount(login string, from *time.Time, to *time.Time) int 
 		TotalContributions
 }
 
-func GetUserJoinedAt(login string) *time.Time {
+func GetUserJoinedAt(login string) time.Time {
 	client := getClient()
 
 	variables := map[string]interface{}{
@@ -40,5 +40,5 @@ func GetUserJoinedAt(login string) *time.Time {
 		panic(err)
 	}
 
-	return &query.User.CreatedAt
+	return query.User.CreatedAt
 }
