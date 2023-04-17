@@ -4,7 +4,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	grpc_server "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server"
-	rest_server "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest"
+	rest_server "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest/server"
 )
 
 func main() {

@@ -2,18 +2,13 @@ package middlewares
 
 import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
-	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/core/client"
+	core_client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest/client/core"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 func AuthorizeMiddleware(c *fiber.Ctx) error {
 	var err *fiber.Error
-	isPubilc := c.Locals("isPublic").(bool)
-
-	if c.Method() == "GET" && isPubilc {
-		return c.Next()
-	}
 
 	var accessToken string
 	if accessToken, err = util.ExtractAccessFromHeader(c.GetReqHeaders()); err != nil {
