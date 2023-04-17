@@ -1,3 +1,6 @@
 [submodule "proto"]
-	path = proto
+	path = common/grpc/proto
+	url = https://github.com/NULL-SoftwareMeisterHighSchool/proto-buffer.git
+[submodule "common/grpc/proto"]
+	path = common/grpc/proto
 	url = https://github.com/NULL-SoftwareMeisterHighSchool/proto-buffer.git
