@@ -16,4 +16,10 @@ func Listen() {
 	}
 
 	grpcServer := grpc.NewServer()
+
+	
+	
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatal(err)
+	}
 }

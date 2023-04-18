@@ -2,6 +2,7 @@ package rest_server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
@@ -44,5 +45,7 @@ func Listen() {
 		}
 
 	}
-	app.Listen(fmt.Sprintf(":%s", config.REST_PORT))
+	if err := app.Listen(fmt.Sprintf(":%s", config.REST_PORT)); err != nil {
+		log.Fatal(err)
+	}
 }
