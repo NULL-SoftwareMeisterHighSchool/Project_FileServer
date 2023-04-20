@@ -1,15 +1,23 @@
 package article_entity
 
-import "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
+import (
+	"time"
+
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
+)
 
 const MAX_SUMMARY_LENGTH = 100
 
+// should change those urls into url.URL type
 type Article struct {
-	ID        uint     `json:"id"`
-	AuthorID  uint     `json:"authorId"`
-	Summary   string   `json:"summary"`
-	Thumbnail string   `json:"thumbnail"`
-	Images    []string `json:"-"`
+	ID        uint        `gorm:"type:autoIncrement" json:"id"`
+	AuthorID  uint        `json:"authorId"`
+	CreatedAt time.Time   `gorm:"autoCreateTime" json:"createdAt"`
+	UpdatedAt time.Time   `gorm:"autoUpdateTime" json:"updatedAt"`
+	Summary   string      `json:"summary"`
+	Thumbnail string      `json:"thumbnail"`
+	Images    []string    `json:"-"`
+	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE" json:"-"`
 }
 
 func New() *Article {

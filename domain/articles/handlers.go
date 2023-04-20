@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/db"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
+	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
@@ -17,13 +17,13 @@ func GetArticleInfo(c *fiber.Ctx) error {
 		return errors.ErrInvalidID
 	}
 
-	articles := db.GetArticleInfoByIDs(ids)
+	articles := db.DB().GetArticleInfoByIDs(ids)
 	return c.Status(http.StatusOK).JSON(articles)
 }
 
 func GetArticle(c *fiber.Ctx) error {
 	id, authorID := getArticleIDAndAuthorID(c)
-	storage := storages.Get()
+	article_repo.
 
 	article, size := storage.GetArticle(authorID, id)
 	if article == nil {
@@ -35,15 +35,15 @@ func GetArticle(c *fiber.Ctx) error {
 
 func CreateArticle(c *fiber.Ctx) error {
 	id, authorID := getArticleIDAndAuthorID(c)
-	storage := storages.Get()
+	db.DB()
 
 	if storage.ArticleExists(authorID, id) {
 		return errors.ErrConflict
 	}
 
 	body := util.SanitizeXSS(c.Body())
-	article := db.CreateArticle(id, authorID, body)
-	go db.Save(article)
+	article := db.DB().CreateArticle(id, authorID, body)
+	go db.DB().Save(article)
 
 	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
@@ -60,13 +60,13 @@ func UpdateArticle(c *fiber.Ctx) error {
 		return errors.ErrArticleNotFound
 	}
 
-	newArticle := db.CreateArticle(id, authorID, body)
+	newArticle := db.DB().CreateArticle(id, authorID, body)
 	diff := util.GetDifferenceBetweenStrArr(
-		db.GetImageURLsByID(id), newArticle.Images,
+		db.DB().GetImageURLsByID(id), newArticle.Images,
 	)
 	imagesToDelete := filterDeletableImageURLByEndpoint(diff, config.IMAGE_HOST_ENDPOINT)
 	go storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
-	go db.Save(newArticle)
+	go db.DB().Save(newArticle)
 
 	if err := storage.WriteArticle(authorID, id, body); err != nil {
 		return err
@@ -83,10 +83,10 @@ func DeleteArticle(c *fiber.Ctx) error {
 	}
 
 	imagesToDelete := filterDeletableImageURLByEndpoint(
-		db.GetImageURLsByID(id), config.IMAGE_HOST_ENDPOINT,
+		db.DB().GetImageURLsByID(id), config.IMAGE_HOST_ENDPOINT,
 	)
 	go storage.DeleteImages(authorID, storage.GetSuffixesFromURLs(imagesToDelete))
-	go db.DeleteByID(id)
+	go db.DB().DeleteByID(id)
 
 	return c.SendStatus(http.StatusNoContent)
 }
