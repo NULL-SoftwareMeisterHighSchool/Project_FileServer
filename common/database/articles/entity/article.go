@@ -1,12 +1,13 @@
 package article_entity
 
 import (
+	"strings"
 	"time"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 )
 
-const MAX_SUMMARY_LENGTH = 100
+const MAX_SUMMARY_LENGTH = 400
 
 // should change those urls into url.URL type
 type Article struct {
@@ -16,8 +17,13 @@ type Article struct {
 	UpdatedAt time.Time   `gorm:"autoUpdateTime" json:"updatedAt"`
 	Summary   string      `json:"summary"`
 	Thumbnail string      `json:"thumbnail"`
-	Images    []string    `json:"-"`
+	Images    string      `json:"-"`
 	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE" json:"-"`
+}
+
+type ArticleBody struct {
+	ArticleID uint
+	Text      []byte `gorm:"type:longtext"`
 }
 
 func New() *Article {
@@ -34,6 +40,14 @@ func (a *Article) SetAuthorID(authorID uint) *Article {
 	return a
 }
 
+func (a *Article) SetBody(body []byte) *Article {
+	a.Body = ArticleBody{
+		ArticleID: a.ID,
+		Text:      body,
+	}
+	return a
+}
+
 func (a *Article) SetSummary(body []byte) *Article {
 	plainText := util.SanitizeExceptPlainText(body)
 	minLength := util.GetMin(len(plainText), MAX_SUMMARY_LENGTH)
@@ -41,8 +55,8 @@ func (a *Article) SetSummary(body []byte) *Article {
 	return a
 }
 
-func (a *Article) SetImages(body []byte) *Article {
-	a.Images = util.ExtractImageURL(body)
+func (a *Article) SetImagesAndThumbnail(images []string) *Article {
+	a.Images = strings.Join(images, "^")
 	a.setThumbnail()
 	return a
 }
@@ -50,7 +64,7 @@ func (a *Article) SetImages(body []byte) *Article {
 func (a *Article) setThumbnail() {
 	if len(a.Images) == 0 {
 		a.Thumbnail = ""
-	} else {
-		a.Thumbnail = a.Images[0]
+		return
 	}
+	a.Thumbnail = strings.Split(a.Images, "^")[0]
 }

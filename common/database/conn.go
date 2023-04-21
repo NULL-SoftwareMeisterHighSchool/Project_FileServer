@@ -5,11 +5,13 @@ import (
 	"log"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
+	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
+var Articles = db.Model(article_entity.New())
 
 func Connect() {
 	dsn := fmt.Sprintf(
@@ -21,5 +23,5 @@ func Connect() {
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
-	DB = d
+	db = d
 }

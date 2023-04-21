@@ -6,39 +6,46 @@ import (
 )
 
 func Save(article *article_entity.Article) {
-	database.DB.Save(article)
+	database.Articles.Save(article)
 }
 
 // CreateArticle creates article from body. but doesn't save it
-func CreateArticle(articleID, authorID uint, body []byte) *article_entity.Article {
+func CreateArticle(articleID, authorID uint, body []byte, images []string) *article_entity.Article {
 	return article_entity.New().
 		SetAuthorID(authorID).
 		SetID(articleID).
+		SetBody(body).
 		SetSummary(body).
-		SetImages(body)
+		SetImagesAndThumbnail(images)
 }
 
 func DeleteByID(id uint) {
-	database.DB.Where("id = ?", id).Delete(article_entity.New())
+	database.Articles.Where("id = ?", id).Delete(article_entity.New())
 }
 
 func DeleteByAuthorID(authorID uint) {
-	database.DB.Where("userId = ?", authorID).Delete(article_entity.New())
+	database.Articles.Where("userId = ?", authorID).Delete(article_entity.New())
 }
 
 func GetImageURLsByID(id uint) []string {
 	urls := []string{}
-	database.DB.Model(article_entity.New()).Where("id = ?", id).Select("images").Take(urls)
+	database.Articles.Where("id = ?", id).Select("images").Take(urls)
 	return urls
 }
 
 func GetArticleInfoByIDs(ids []uint) []*article_entity.Article {
 	var articles []*article_entity.Article
-	database.DB.
+	database.Articles.
 		Where("id IN ?", ids).
 		Omit("images").
 		Find(&articles).
 		Order("id")
 
 	return articles
+}
+
+func GetArticleWithBody(id uint) *article_entity.Article {
+	var article *article_entity.Article
+	database.Articles.Where("id = ?", id).Association("body").Find(article)
+	return article
 }
