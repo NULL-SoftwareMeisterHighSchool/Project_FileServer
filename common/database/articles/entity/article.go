@@ -11,19 +11,20 @@ const MAX_SUMMARY_LENGTH = 400
 
 // should change those urls into url.URL type
 type Article struct {
-	ID        uint        `gorm:"type:autoIncrement" json:"id"`
-	AuthorID  uint        `json:"authorId"`
-	CreatedAt time.Time   `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt time.Time   `gorm:"autoUpdateTime" json:"updatedAt"`
-	Summary   string      `json:"summary"`
-	Thumbnail string      `json:"thumbnail"`
-	Images    string      `json:"-"`
-	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE" json:"-"`
+	ID        uint        `gorm:"autoIncrement"`
+	AuthorID  uint        `gorm:"not null"`
+	CreatedAt time.Time   `gorm:"autoCreateTime"`
+	UpdatedAt time.Time   `gorm:"autoUpdateTime"`
+	Summary   string      `gorm:"type:varchar(400)"`
+	Thumbnail string      `gorm:"type:varchar(2048)"`
+	Images    string      `gorm:"type:text"`
+	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
+	Views     uint64
 }
 
 type ArticleBody struct {
 	ArticleID uint
-	Text      []byte `gorm:"type:longtext"`
+	Text      []byte `gorm:"type:longtext,index:,class:FULLTEXT,option:WITH PARSER ngram"`
 }
 
 func New() *Article {
