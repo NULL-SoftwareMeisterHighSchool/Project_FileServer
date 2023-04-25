@@ -23,5 +23,6 @@ func Connect() {
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
+	d.AutoMigrate(article_entity.New())
 	db = d
 }
