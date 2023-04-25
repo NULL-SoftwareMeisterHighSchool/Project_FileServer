@@ -11,7 +11,7 @@ import (
 )
 
 var db *gorm.DB
-var Articles = db.Model(article_entity.New())
+var Articles = db.Model(&article_entity.Article{})
 
 func Connect() {
 	dsn := fmt.Sprintf(
@@ -23,6 +23,11 @@ func Connect() {
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
-	d.AutoMigrate(article_entity.New())
 	db = d
+	migrateDB(db)
+}
+
+func migrateDB(database *gorm.DB) {
+	database.AutoMigrate(&article_entity.Article{})
+	database.AutoMigrate(&article_entity.ArticleBody{})
 }
