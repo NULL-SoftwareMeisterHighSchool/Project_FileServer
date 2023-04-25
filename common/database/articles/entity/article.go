@@ -15,6 +15,7 @@ type Article struct {
 	AuthorID  uint        `gorm:"not null"`
 	CreatedAt time.Time   `gorm:"autoCreateTime"`
 	UpdatedAt time.Time   `gorm:"autoUpdateTime"`
+	Title     string      `gorm:"type:varchar(2048),index:,class:FULLTEXT,option:WITH PARSER ngram"`
 	Summary   string      `gorm:"type:varchar(400)"`
 	Thumbnail string      `gorm:"type:varchar(2048)"`
 	Images    string      `gorm:"type:text"`
@@ -46,6 +47,11 @@ func (a *Article) SetBody(body []byte) *Article {
 		ArticleID: a.ID,
 		Text:      body,
 	}
+	return a
+}
+
+func (a *Article) SetTitle(title string) *Article {
+	a.Title = title
 	return a
 }
 
