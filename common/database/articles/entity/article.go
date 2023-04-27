@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 )
 
@@ -21,6 +22,7 @@ type Article struct {
 	Images    string      `gorm:"type:text"`
 	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
 	Views     uint64
+	Comments  []*comment_entity.Comment `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
 }
 
 type ArticleBody struct {

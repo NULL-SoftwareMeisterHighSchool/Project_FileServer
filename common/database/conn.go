@@ -6,6 +6,7 @@ import (
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
+	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ import (
 var db *gorm.DB
 var Articles = db.Model(&article_entity.Article{})
 var Users = db.Model(&user_entity.User{})
+var Comments = db.Model(&comment_entity.Comment{})
 
 func Connect() {
 	dsn := fmt.Sprintf(
@@ -33,4 +35,5 @@ func migrateDB(database *gorm.DB) {
 	database.AutoMigrate(&article_entity.Article{})
 	database.AutoMigrate(&article_entity.ArticleBody{})
 	database.AutoMigrate(&user_entity.User{})
+	database.AutoMigrate(&comment_entity.Comment{})
 }
