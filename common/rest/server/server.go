@@ -16,7 +16,6 @@ import (
 
 func Listen() {
 
-	// config
 	appConfig := fiber.Config{
 		ErrorHandler: errors.CustomErrorHandler,
 	}
@@ -25,15 +24,11 @@ func Listen() {
 	app.Use(logger.New())
 	app.Use(recover.New())
 
-	// routes
 	{
-
-		// ping pong
 		app.Get("ping", func(c *fiber.Ctx) error {
 			return c.Status(http.StatusOK).JSON(fiber.Map{"message": "pong"})
 		})
 
-		// images
 		imagesRouter := app.Group("images")
 		{
 			imagesRouter.Post("",
