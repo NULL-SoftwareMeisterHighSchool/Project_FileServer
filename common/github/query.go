@@ -8,7 +8,7 @@ import (
 
 const isoLayout = "2006-01-02T15:04:05-0700"
 
-func GetUserContributionCount(login string, from, to *time.Time) int {
+func GetUserContributionCount(login string, from, to *time.Time) uint32 {
 	client := getClient()
 
 	variables := map[string]interface{}{

@@ -6,7 +6,7 @@ type queryCountUserContribution struct {
 	User struct {
 		ContributionsCollection struct {
 			ContributionCalendar struct {
-				TotalContributions int
+				TotalContributions uint32
 			} `graphql:"contributionCalendar(from: $from, to: $to)"`
 		}
 	} `graphql:"user(login: $login)"`
