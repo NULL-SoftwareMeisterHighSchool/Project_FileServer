@@ -5,7 +5,6 @@ import (
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
-	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"github.com/gofiber/fiber/v2"
@@ -24,31 +23,12 @@ func GetArticleInfo(c *fiber.Ctx) error {
 func GetArticle(c *fiber.Ctx) error {
 	id, authorID := getArticleIDAndAuthorID(c)
 	article_repo.
-
-	article, size := storage.GetArticle(authorID, id)
+		article, size := storage.GetArticle(authorID, id)
 	if article == nil {
 		return errors.ErrArticleNotFound
 	}
 
 	return c.Status(http.StatusOK).SendStream(article, int(size))
-}
-
-func CreateArticle(c *fiber.Ctx) error {
-	id, authorID := getArticleIDAndAuthorID(c)
-	db.DB()
-
-	if storage.ArticleExists(authorID, id) {
-		return errors.ErrConflict
-	}
-
-	body := util.SanitizeXSS(c.Body())
-	article := db.DB().CreateArticle(id, authorID, body)
-	go db.DB().Save(article)
-
-	if err := storage.WriteArticle(authorID, id, body); err != nil {
-		return err
-	}
-	return c.SendStatus(http.StatusCreated)
 }
 
 func UpdateArticle(c *fiber.Ctx) error {

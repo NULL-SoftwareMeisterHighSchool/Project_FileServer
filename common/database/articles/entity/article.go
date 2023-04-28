@@ -10,6 +10,13 @@ import (
 
 const MAX_SUMMARY_LENGTH = 400
 
+type ArticleType uint8
+
+const (
+	TYPE_GENERAL ArticleType = iota
+	TYPE_TECH
+)
+
 // should change those urls into url.URL type
 type Article struct {
 	ID        uint        `gorm:"autoIncrement"`
@@ -21,6 +28,7 @@ type Article struct {
 	Thumbnail string      `gorm:"type:varchar(2048)"`
 	Images    string      `gorm:"type:text"`
 	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
+	Type      ArticleType `gorm:"type:tinyint"`
 	Views     uint64
 	Comments  []*comment_entity.Comment `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
 }
@@ -61,6 +69,11 @@ func (a *Article) SetSummary(body []byte) *Article {
 	plainText := util.SanitizeExceptPlainText(body)
 	minLength := util.GetMin(len(plainText), MAX_SUMMARY_LENGTH)
 	a.Summary = string(plainText[:minLength])
+	return a
+}
+
+func (a *Article) SetArticleType(articleType ArticleType) *Article {
+	a.Type = articleType
 	return a
 }
 

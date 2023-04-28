@@ -8,6 +8,7 @@ package articles_pb
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -33,14 +34,14 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleServiceClient interface {
-	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	ListArticle(ctx context.Context, in *ListArticleRequest, opts ...grpc.CallOption) (*ListArticleResponse, error)
 	GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
-	UpdateArticleBody(ctx context.Context, in *UpdateArticleBodyRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	UpdateArticleTitle(ctx context.Context, in *UpdateArticleTitleRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	SetArticleVisibility(ctx context.Context, in *SetArticleVisibilityRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	ToggleArticleLike(ctx context.Context, in *ToggleArticleLikeRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	UpdateArticleBody(ctx context.Context, in *UpdateArticleBodyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	UpdateArticleTitle(ctx context.Context, in *UpdateArticleTitleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	SetArticleVisibility(ctx context.Context, in *SetArticleVisibilityRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	ToggleArticleLike(ctx context.Context, in *ToggleArticleLikeRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type articleServiceClient struct {
@@ -51,8 +52,8 @@ func NewArticleServiceClient(cc grpc.ClientConnInterface) ArticleServiceClient {
 	return &articleServiceClient{cc}
 }
 
-func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_CreateArticle_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -78,8 +79,8 @@ func (c *articleServiceClient) GetArticle(ctx context.Context, in *GetArticleReq
 	return out, nil
 }
 
-func (c *articleServiceClient) UpdateArticleBody(ctx context.Context, in *UpdateArticleBodyRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) UpdateArticleBody(ctx context.Context, in *UpdateArticleBodyRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_UpdateArticleBody_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -87,8 +88,8 @@ func (c *articleServiceClient) UpdateArticleBody(ctx context.Context, in *Update
 	return out, nil
 }
 
-func (c *articleServiceClient) UpdateArticleTitle(ctx context.Context, in *UpdateArticleTitleRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) UpdateArticleTitle(ctx context.Context, in *UpdateArticleTitleRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_UpdateArticleTitle_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -96,8 +97,8 @@ func (c *articleServiceClient) UpdateArticleTitle(ctx context.Context, in *Updat
 	return out, nil
 }
 
-func (c *articleServiceClient) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_DeleteArticle_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -105,8 +106,8 @@ func (c *articleServiceClient) DeleteArticle(ctx context.Context, in *DeleteArti
 	return out, nil
 }
 
-func (c *articleServiceClient) SetArticleVisibility(ctx context.Context, in *SetArticleVisibilityRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) SetArticleVisibility(ctx context.Context, in *SetArticleVisibilityRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_SetArticleVisibility_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,8 +115,8 @@ func (c *articleServiceClient) SetArticleVisibility(ctx context.Context, in *Set
 	return out, nil
 }
 
-func (c *articleServiceClient) ToggleArticleLike(ctx context.Context, in *ToggleArticleLikeRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *articleServiceClient) ToggleArticleLike(ctx context.Context, in *ToggleArticleLikeRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, ArticleService_ToggleArticleLike_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -127,14 +128,14 @@ func (c *articleServiceClient) ToggleArticleLike(ctx context.Context, in *Toggle
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
 type ArticleServiceServer interface {
-	CreateArticle(context.Context, *CreateArticleRequest) (*StatusResponse, error)
+	CreateArticle(context.Context, *CreateArticleRequest) (*empty.Empty, error)
 	ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error)
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error)
-	UpdateArticleBody(context.Context, *UpdateArticleBodyRequest) (*StatusResponse, error)
-	UpdateArticleTitle(context.Context, *UpdateArticleTitleRequest) (*StatusResponse, error)
-	DeleteArticle(context.Context, *DeleteArticleRequest) (*StatusResponse, error)
-	SetArticleVisibility(context.Context, *SetArticleVisibilityRequest) (*StatusResponse, error)
-	ToggleArticleLike(context.Context, *ToggleArticleLikeRequest) (*StatusResponse, error)
+	UpdateArticleBody(context.Context, *UpdateArticleBodyRequest) (*empty.Empty, error)
+	UpdateArticleTitle(context.Context, *UpdateArticleTitleRequest) (*empty.Empty, error)
+	DeleteArticle(context.Context, *DeleteArticleRequest) (*empty.Empty, error)
+	SetArticleVisibility(context.Context, *SetArticleVisibilityRequest) (*empty.Empty, error)
+	ToggleArticleLike(context.Context, *ToggleArticleLikeRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
 
@@ -142,7 +143,7 @@ type ArticleServiceServer interface {
 type UnimplementedArticleServiceServer struct {
 }
 
-func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateArticleRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateArticleRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateArticle not implemented")
 }
 func (UnimplementedArticleServiceServer) ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error) {
@@ -151,19 +152,19 @@ func (UnimplementedArticleServiceServer) ListArticle(context.Context, *ListArtic
 func (UnimplementedArticleServiceServer) GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArticle not implemented")
 }
-func (UnimplementedArticleServiceServer) UpdateArticleBody(context.Context, *UpdateArticleBodyRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) UpdateArticleBody(context.Context, *UpdateArticleBodyRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateArticleBody not implemented")
 }
-func (UnimplementedArticleServiceServer) UpdateArticleTitle(context.Context, *UpdateArticleTitleRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) UpdateArticleTitle(context.Context, *UpdateArticleTitleRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateArticleTitle not implemented")
 }
-func (UnimplementedArticleServiceServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticle not implemented")
 }
-func (UnimplementedArticleServiceServer) SetArticleVisibility(context.Context, *SetArticleVisibilityRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) SetArticleVisibility(context.Context, *SetArticleVisibilityRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetArticleVisibility not implemented")
 }
-func (UnimplementedArticleServiceServer) ToggleArticleLike(context.Context, *ToggleArticleLikeRequest) (*StatusResponse, error) {
+func (UnimplementedArticleServiceServer) ToggleArticleLike(context.Context, *ToggleArticleLikeRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ToggleArticleLike not implemented")
 }
 func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
