@@ -8,6 +8,7 @@ package comments_pb
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -28,8 +29,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommentServiceClient interface {
-	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	DeleteCommnet(ctx context.Context, in *DeleteCommnetRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	DeleteCommnet(ctx context.Context, in *DeleteCommnetRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetCommentsByArticleID(ctx context.Context, in *GetCommentsByArticleIDRequest, opts ...grpc.CallOption) (*GetCommentsByArticleIDResponse, error)
 }
 
@@ -41,8 +42,8 @@ func NewCommentServiceClient(cc grpc.ClientConnInterface) CommentServiceClient {
 	return &commentServiceClient{cc}
 }
 
-func (c *commentServiceClient) CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *commentServiceClient) CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, CommentService_CreateComment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +51,8 @@ func (c *commentServiceClient) CreateComment(ctx context.Context, in *CreateComm
 	return out, nil
 }
 
-func (c *commentServiceClient) DeleteCommnet(ctx context.Context, in *DeleteCommnetRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *commentServiceClient) DeleteCommnet(ctx context.Context, in *DeleteCommnetRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, CommentService_DeleteCommnet_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,8 +73,8 @@ func (c *commentServiceClient) GetCommentsByArticleID(ctx context.Context, in *G
 // All implementations must embed UnimplementedCommentServiceServer
 // for forward compatibility
 type CommentServiceServer interface {
-	CreateComment(context.Context, *CreateCommentRequest) (*StatusResponse, error)
-	DeleteCommnet(context.Context, *DeleteCommnetRequest) (*StatusResponse, error)
+	CreateComment(context.Context, *CreateCommentRequest) (*empty.Empty, error)
+	DeleteCommnet(context.Context, *DeleteCommnetRequest) (*empty.Empty, error)
 	GetCommentsByArticleID(context.Context, *GetCommentsByArticleIDRequest) (*GetCommentsByArticleIDResponse, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
@@ -82,10 +83,10 @@ type CommentServiceServer interface {
 type UnimplementedCommentServiceServer struct {
 }
 
-func (UnimplementedCommentServiceServer) CreateComment(context.Context, *CreateCommentRequest) (*StatusResponse, error) {
+func (UnimplementedCommentServiceServer) CreateComment(context.Context, *CreateCommentRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
 }
-func (UnimplementedCommentServiceServer) DeleteCommnet(context.Context, *DeleteCommnetRequest) (*StatusResponse, error) {
+func (UnimplementedCommentServiceServer) DeleteCommnet(context.Context, *DeleteCommnetRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCommnet not implemented")
 }
 func (UnimplementedCommentServiceServer) GetCommentsByArticleID(context.Context, *GetCommentsByArticleIDRequest) (*GetCommentsByArticleIDResponse, error) {

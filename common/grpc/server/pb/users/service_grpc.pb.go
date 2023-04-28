@@ -8,6 +8,7 @@ package users_pb
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,8 +28,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserEventServiceClient interface {
-	PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*Nothing, error)
-	PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*Nothing, error)
+	PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
+	PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type userEventServiceClient struct {
@@ -39,8 +40,8 @@ func NewUserEventServiceClient(cc grpc.ClientConnInterface) UserEventServiceClie
 	return &userEventServiceClient{cc}
 }
 
-func (c *userEventServiceClient) PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*Nothing, error) {
-	out := new(Nothing)
+func (c *userEventServiceClient) PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, UserEventService_PublishUserCreated_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -48,8 +49,8 @@ func (c *userEventServiceClient) PublishUserCreated(ctx context.Context, in *Cre
 	return out, nil
 }
 
-func (c *userEventServiceClient) PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*Nothing, error) {
-	out := new(Nothing)
+func (c *userEventServiceClient) PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, UserEventService_PublishUserDeleted_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,8 +62,8 @@ func (c *userEventServiceClient) PublishUserDeleted(ctx context.Context, in *Del
 // All implementations must embed UnimplementedUserEventServiceServer
 // for forward compatibility
 type UserEventServiceServer interface {
-	PublishUserCreated(context.Context, *CreateUserEvent) (*Nothing, error)
-	PublishUserDeleted(context.Context, *DeleteUserEvent) (*Nothing, error)
+	PublishUserCreated(context.Context, *CreateUserEvent) (*empty.Empty, error)
+	PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error)
 	mustEmbedUnimplementedUserEventServiceServer()
 }
 
@@ -70,10 +71,10 @@ type UserEventServiceServer interface {
 type UnimplementedUserEventServiceServer struct {
 }
 
-func (UnimplementedUserEventServiceServer) PublishUserCreated(context.Context, *CreateUserEvent) (*Nothing, error) {
+func (UnimplementedUserEventServiceServer) PublishUserCreated(context.Context, *CreateUserEvent) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishUserCreated not implemented")
 }
-func (UnimplementedUserEventServiceServer) PublishUserDeleted(context.Context, *DeleteUserEvent) (*Nothing, error) {
+func (UnimplementedUserEventServiceServer) PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishUserDeleted not implemented")
 }
 func (UnimplementedUserEventServiceServer) mustEmbedUnimplementedUserEventServiceServer() {}
