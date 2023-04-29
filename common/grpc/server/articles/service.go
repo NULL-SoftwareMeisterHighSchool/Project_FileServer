@@ -25,7 +25,7 @@ func (ArticleServiceServer) ListArticle(ctx context.Context, request *pb.ListArt
 		uint(request.GetOffset()),
 		uint(request.GetAmount()),
 		article_repo.ArticleOrder(request.GetOrder()),
-		article_repo.ArticleTypeOption((request.GetType())),
+		article_repo.ArticleTypeOption(request.GetType()),
 		uint(request.GetAuthorID()),
 		request.IsPrivate,
 		request.GetDuration(),
