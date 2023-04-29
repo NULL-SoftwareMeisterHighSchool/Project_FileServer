@@ -29,6 +29,7 @@ type Article struct {
 	Images    string      `gorm:"type:text"`
 	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
 	Type      ArticleType `gorm:"type:tinyint"`
+	IsPrivate bool        `gorm:"type:tinyint"`
 	Views     uint64
 	Comments  []*comment_entity.Comment `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
 }
@@ -74,6 +75,11 @@ func (a *Article) SetSummary(body []byte) *Article {
 
 func (a *Article) SetArticleType(articleType ArticleType) *Article {
 	a.Type = articleType
+	return a
+}
+
+func (a *Article) SetIsPrivate(isPrivate bool) *Article {
+	a.IsPrivate = isPrivate
 	return a
 }
 

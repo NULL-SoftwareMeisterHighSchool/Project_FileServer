@@ -3,6 +3,7 @@ package articles_server
 import (
 	"context"
 
+	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles"
 	"github.com/golang/protobuf/ptypes/empty"
@@ -19,8 +20,17 @@ func (ArticleServiceServer) CreateArticle(ctx context.Context, request *pb.Creat
 	return &empty.Empty{}, nil
 }
 
-func (ArticleServiceServer) ListArticle(context.Context, *pb.ListArticleRequest) (*pb.ListArticleResponse, error) {
-
+func (ArticleServiceServer) ListArticle(ctx context.Context, request *pb.ListArticleRequest) (*pb.ListArticleResponse, error) {
+	return articles.ListArticles(
+		uint(request.GetOffset()),
+		uint(request.GetAmount()),
+		article_repo.ArticleOrder(request.GetOrder()),
+		article_repo.ArticleTypeOption((request.GetType())),
+		uint(request.GetAuthorID()),
+		request.IsPrivate,
+		request.GetDuration(),
+		request.GetQuery(),
+	)
 }
 
 func (ArticleServiceServer) GetArticle(context.Context, *pb.GetArticleRequest) (*pb.GetArticleResponse, error) {

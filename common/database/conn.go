@@ -14,8 +14,10 @@ import (
 
 var db *gorm.DB
 var Articles = db.Model(&article_entity.Article{})
+var ArticleBodies = db.Model(&article_entity.ArticleBody{})
 var Users = db.Model(&user_entity.User{})
 var Comments = db.Model(&comment_entity.Comment{})
+var ArticleLikes = db.Table("user_likes")
 
 func Connect() {
 	dsn := fmt.Sprintf(
@@ -32,8 +34,8 @@ func Connect() {
 }
 
 func migrateDB(database *gorm.DB) {
-	database.AutoMigrate(&article_entity.Article{})
-	database.AutoMigrate(&article_entity.ArticleBody{})
-	database.AutoMigrate(&user_entity.User{})
-	database.AutoMigrate(&comment_entity.Comment{})
+	Articles.AutoMigrate()
+	ArticleBodies.AutoMigrate()
+	Users.AutoMigrate()
+	Comments.AutoMigrate()
 }
