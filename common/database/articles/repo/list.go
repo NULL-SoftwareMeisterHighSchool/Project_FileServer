@@ -7,39 +7,13 @@ import (
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 )
 
-type ArticleOrder uint8
-
-const (
-	TIME ArticleOrder = iota
-	POPULARITY
-	RELEVANCE
-)
-
-type ArticleTypeOption uint8
-
-const (
-	ALL ArticleTypeOption = iota
-	GENERAL
-	TECH
-)
-
 type ListArticleElemWithLikes struct {
 	article_entity.Article
 	Likes uint
 }
 
-func CreateArticle(authorID uint, title string, articleType article_entity.ArticleType) error {
-	article := article_entity.New().
-		SetAuthorID(authorID).
-		SetTitle(title).
-		SetArticleType(articleType).
-		SetIsPrivate(true)
-
-	tx := database.Articles.Create(&article)
-	return tx.Error
-}
-
-func ListArticles(offset uint,
+func ListArticles(
+	offset uint,
 	amount uint,
 	order ArticleOrder,
 	articleType ArticleTypeOption,
@@ -47,7 +21,8 @@ func ListArticles(offset uint,
 	isPrivate *bool,
 	start time.Time,
 	end time.Time,
-	query string) []*ListArticleElemWithLikes {
+	query string,
+) []*ListArticleElemWithLikes {
 
 	var articles []*ListArticleElemWithLikes
 
@@ -92,18 +67,4 @@ func ListArticles(offset uint,
 	tx.Offset(int(offset)).Limit(int(amount)).Find(&articles)
 
 	return articles
-}
-
-func DeleteByID(id uint) {
-	database.Articles.Delete(article_entity.New().SetID(id))
-}
-
-func DeleteByAuthorID(authorID uint) {
-	database.Articles.Delete(article_entity.New().SetAuthorID(authorID))
-}
-
-func GetArticleWithBody(id uint) *article_entity.Article {
-	var article *article_entity.Article
-	database.Articles.Where("id = ?", id).Association("body").Find(article)
-	return article
 }
