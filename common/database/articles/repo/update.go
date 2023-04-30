@@ -11,3 +11,9 @@ func IncreaseViewCount(articleID uint) {
 		Where("id = ?", articleID).
 		UpdateColumn("views", gorm.Expr("views  + ?", 1))
 }
+
+func UpdateArticleBody(articleID uint, body []byte) {
+	database.ArticleBodies.
+		Where("article_id = ?", articleID).
+		UpdateColumn("text", body)
+}

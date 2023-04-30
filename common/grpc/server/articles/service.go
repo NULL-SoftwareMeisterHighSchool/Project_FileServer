@@ -80,7 +80,7 @@ func (ArticleServiceServer) UpdateArticleBody(ctx context.Context, request *pb.U
 }
 
 func (ArticleServiceServer) UpdateArticleTitle(context.Context, *pb.UpdateArticleTitleRequest) (*empty.Empty, error) {
-
+	
 }
 
 func (ArticleServiceServer) DeleteArticle(context.Context, *pb.DeleteArticleRequest) (*empty.Empty, error) {

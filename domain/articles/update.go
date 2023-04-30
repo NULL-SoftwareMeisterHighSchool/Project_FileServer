@@ -15,7 +15,6 @@ func UpdateArticleBody(articleID, userID uint, body []byte) error {
 		return article_errors.ErrPermissionDenied
 	}
 
-	// do your thing...
-
+	go article_repo.UpdateArticleBody(articleID, body)
 	return nil
 }
