@@ -79,8 +79,8 @@ func (ArticleServiceServer) UpdateArticleBody(ctx context.Context, request *pb.U
 	return &emptypb.Empty{}, nil
 }
 
-func (ArticleServiceServer) UpdateArticleTitle(context.Context, *pb.UpdateArticleTitleRequest) (*empty.Empty, error) {
-	if err := articles.UpdateArticleTitle(uint(request.GetArticleID()), uint(request.GetUserID()), )); err != nil {
+func (ArticleServiceServer) UpdateArticleTitle(ctx context.Context, request *pb.UpdateArticleTitleRequest) (*empty.Empty, error) {
+	if err := articles.UpdateArticleTitle(uint(request.GetArticleID()), uint(request.GetUserID()), string(request.GetTitle())); err != nil {
 		return nil, statusForError(err)
 	}
 

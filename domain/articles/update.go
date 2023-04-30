@@ -20,5 +20,6 @@ func UpdateArticleTitle(articleID, userID uint, title string) error {
 		return err
 	}
 
+	go article_repo.UpdateTitleByID(articleID, title)
 	return nil
 }

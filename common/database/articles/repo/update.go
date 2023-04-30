@@ -21,5 +21,14 @@ func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) {
 		SetSummary(body).
 		SetImagesAndThumbnail(images)
 
-	database.Articles.Where("id = ?", articleID).Omit("id").Updates(article)
+	database.Articles.
+		Where("id = ?", articleID).
+		Omit("id").
+		Updates(article)
+}
+
+func UpdateTitleByID(articleID uint, title string) {
+	database.Articles.
+		Where("id = ?", articleID).
+		Update("title", title)
 }
