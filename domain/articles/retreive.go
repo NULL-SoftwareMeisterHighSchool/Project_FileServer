@@ -8,11 +8,17 @@ import (
 )
 
 func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
-	article, err := article_repo.GetArticleWithBody(articleID, userID)
+
+	pInfo, err := article_repo.GetArticlePermissionInfoByID(articleID)
 
 	if err != nil {
 		return nil, article_errors.ErrNotFound
 	}
+	if pInfo.IsPrivate && pInfo.AuthorID != userID {
+		return nil, article_errors.ErrPermissionDenied
+	}
+
+	article, _ := article_repo.GetArticleWithBody(articleID, userID)
 
 	go article_repo.IncreaseViewCount(articleID)
 

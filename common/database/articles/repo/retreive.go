@@ -8,10 +8,25 @@ import (
 	"gorm.io/gorm"
 )
 
+type ArticlePermissionInfo struct {
+	AuthorID  uint
+	IsPrivate bool
+}
+
 type ArticleWithBodyAndLikes struct {
 	article_entity.Article
 	Likes   uint
 	IsLiked bool
+}
+
+func GetArticlePermissionInfoByID(id uint) (*ArticlePermissionInfo, error) {
+	var info *ArticlePermissionInfo
+	tx := database.Articles.Where("id = ?", id).First(info)
+
+	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return nil, tx.Error
+	}
+	return info, tx.Error
 }
 
 func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {

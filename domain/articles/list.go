@@ -3,7 +3,6 @@ package articles
 import (
 	"time"
 
-	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
 	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
@@ -23,7 +22,7 @@ func ListArticles(
 	falsyP := false
 	start, end := convertDurationOrDefault(duration)
 
-	articles := article_repo.ListArticles(
+	articles := repo.ListArticles(
 		offset, amount, order, articleType,
 		authorID, &falsyP, start, end, query,
 	)
@@ -50,13 +49,12 @@ func ListArticlesByAuthor(
 	if userID != authorID {
 		if isPrivate == nil {
 			*isPrivate = false
-		}
-		if *isPrivate == true {
+		} else if *isPrivate {
 			return nil, article_errors.ErrPermissionDenied
 		}
 	}
 
-	articles := article_repo.ListArticles(
+	articles := repo.ListArticles(
 		offset, amount, order, articleType,
 		authorID, isPrivate, start, end, query,
 	)
