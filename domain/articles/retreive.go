@@ -3,8 +3,7 @@ package articles
 import (
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -12,8 +11,10 @@ func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 	article, err := article_repo.GetArticleWithBody(articleID, userID)
 
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "matching article not found")
+		return nil, article_errors.ErrNotFound
 	}
+
+	go article_repo.IncreaseViewCount(articleID)
 
 	return &pb.GetArticleResponse{
 		ArticleID: uint32(article.ID),

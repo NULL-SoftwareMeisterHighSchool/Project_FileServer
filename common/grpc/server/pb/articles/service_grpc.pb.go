@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	ArticleService_CreateArticle_FullMethodName        = "/articles.ArticleService/CreateArticle"
 	ArticleService_ListArticle_FullMethodName          = "/articles.ArticleService/ListArticle"
+	ArticleService_ListArticleByAuthor_FullMethodName  = "/articles.ArticleService/ListArticleByAuthor"
 	ArticleService_GetArticle_FullMethodName           = "/articles.ArticleService/GetArticle"
 	ArticleService_UpdateArticleBody_FullMethodName    = "/articles.ArticleService/UpdateArticleBody"
 	ArticleService_UpdateArticleTitle_FullMethodName   = "/articles.ArticleService/UpdateArticleTitle"
@@ -36,6 +37,7 @@ const (
 type ArticleServiceClient interface {
 	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	ListArticle(ctx context.Context, in *ListArticleRequest, opts ...grpc.CallOption) (*ListArticleResponse, error)
+	ListArticleByAuthor(ctx context.Context, in *ListArticleByAuthorRequest, opts ...grpc.CallOption) (*ListArticleResponse, error)
 	GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
 	UpdateArticleBody(ctx context.Context, in *UpdateArticleBodyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	UpdateArticleTitle(ctx context.Context, in *UpdateArticleTitleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -64,6 +66,15 @@ func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArti
 func (c *articleServiceClient) ListArticle(ctx context.Context, in *ListArticleRequest, opts ...grpc.CallOption) (*ListArticleResponse, error) {
 	out := new(ListArticleResponse)
 	err := c.cc.Invoke(ctx, ArticleService_ListArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleServiceClient) ListArticleByAuthor(ctx context.Context, in *ListArticleByAuthorRequest, opts ...grpc.CallOption) (*ListArticleResponse, error) {
+	out := new(ListArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleService_ListArticleByAuthor_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,6 +141,7 @@ func (c *articleServiceClient) ToggleArticleLike(ctx context.Context, in *Toggle
 type ArticleServiceServer interface {
 	CreateArticle(context.Context, *CreateArticleRequest) (*empty.Empty, error)
 	ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error)
+	ListArticleByAuthor(context.Context, *ListArticleByAuthorRequest) (*ListArticleResponse, error)
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error)
 	UpdateArticleBody(context.Context, *UpdateArticleBodyRequest) (*empty.Empty, error)
 	UpdateArticleTitle(context.Context, *UpdateArticleTitleRequest) (*empty.Empty, error)
@@ -148,6 +160,9 @@ func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateA
 }
 func (UnimplementedArticleServiceServer) ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListArticle not implemented")
+}
+func (UnimplementedArticleServiceServer) ListArticleByAuthor(context.Context, *ListArticleByAuthorRequest) (*ListArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListArticleByAuthor not implemented")
 }
 func (UnimplementedArticleServiceServer) GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArticle not implemented")
@@ -212,6 +227,24 @@ func _ArticleService_ListArticle_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ArticleServiceServer).ListArticle(ctx, req.(*ListArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_ListArticleByAuthor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArticleByAuthorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).ListArticleByAuthor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleService_ListArticleByAuthor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).ListArticleByAuthor(ctx, req.(*ListArticleByAuthorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -338,6 +371,10 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListArticle",
 			Handler:    _ArticleService_ListArticle_Handler,
+		},
+		{
+			MethodName: "ListArticleByAuthor",
+			Handler:    _ArticleService_ListArticleByAuthor_Handler,
 		},
 		{
 			MethodName: "GetArticle",

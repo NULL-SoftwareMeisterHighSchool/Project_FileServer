@@ -6,6 +6,7 @@ import (
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
+	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -15,14 +16,57 @@ func ListArticles(
 	order repo.ArticleOrder,
 	articleType repo.ArticleTypeOption,
 	authorID uint,
-	isPrivate *bool,
 	duration *pb.Duration,
 	query string,
 ) (*pb.ListArticleResponse, error) {
 
-	var start time.Time
-	var end time.Time
+	falsyP := false
+	start, end := convertDurationOrDefault(duration)
 
+	articles := article_repo.ListArticles(
+		offset, amount, order, articleType,
+		authorID, &falsyP, start, end, query,
+	)
+
+	return &pb.ListArticleResponse{
+		Articles: convertToResponseElems(articles),
+	}, nil
+}
+
+func ListArticlesByAuthor(
+	offset uint,
+	amount uint,
+	order repo.ArticleOrder,
+	articleType repo.ArticleTypeOption,
+	authorID uint,
+	userID uint,
+	duration *pb.Duration,
+	query string,
+	isPrivate *bool,
+) (*pb.ListArticleResponse, error) {
+
+	start, end := convertDurationOrDefault(duration)
+
+	if userID != authorID {
+		if isPrivate == nil {
+			*isPrivate = false
+		}
+		if *isPrivate == true {
+			return nil, article_errors.ErrPermissionDenied
+		}
+	}
+
+	articles := article_repo.ListArticles(
+		offset, amount, order, articleType,
+		authorID, isPrivate, start, end, query,
+	)
+
+	return &pb.ListArticleResponse{
+		Articles: convertToResponseElems(articles),
+	}, nil
+}
+
+func convertDurationOrDefault(duration *pb.Duration) (start time.Time, end time.Time) {
 	if duration != nil {
 		start = time.Unix(duration.GetStart().GetSeconds(), 0)
 		end = time.Unix(duration.GetEnd().GetSeconds(), 0)
@@ -31,16 +75,13 @@ func ListArticles(
 		start = now.AddDate(0, 1, 0) // a month ago
 		end = now
 	}
+	return
+}
 
-	articles := article_repo.ListArticles(
-		offset, amount, order, articleType,
-		authorID, isPrivate, start, end, query,
-	)
-
+func convertToResponseElems(articles []*repo.ListArticleElemWithLikes) []*pb.ListArticleElement {
 	var elems []*pb.ListArticleElement
 
 	for _, article := range articles {
-
 		// TODO: add thumbnail
 		elems = append(elems, &pb.ListArticleElement{
 			ArticleID: uint32(article.ID),
@@ -56,7 +97,5 @@ func ListArticles(
 		})
 	}
 
-	return &pb.ListArticleResponse{
-		Articles: elems,
-	}, nil
+	return elems
 }
