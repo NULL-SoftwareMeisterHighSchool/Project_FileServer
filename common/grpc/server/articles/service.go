@@ -80,7 +80,11 @@ func (ArticleServiceServer) UpdateArticleBody(ctx context.Context, request *pb.U
 }
 
 func (ArticleServiceServer) UpdateArticleTitle(context.Context, *pb.UpdateArticleTitleRequest) (*empty.Empty, error) {
-	
+	if err := articles.UpdateArticleTitle(uint(request.GetArticleID()), uint(request.GetUserID()), )); err != nil {
+		return nil, statusForError(err)
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (ArticleServiceServer) DeleteArticle(context.Context, *pb.DeleteArticleRequest) (*empty.Empty, error) {

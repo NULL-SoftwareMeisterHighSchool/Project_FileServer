@@ -2,6 +2,7 @@ package article_repo
 
 import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
+	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 	"gorm.io/gorm"
 )
 
@@ -12,8 +13,13 @@ func IncreaseViewCount(articleID uint) {
 		UpdateColumn("views", gorm.Expr("views  + ?", 1))
 }
 
-func UpdateArticleBody(articleID uint, body []byte) {
-	database.ArticleBodies.
-		Where("article_id = ?", articleID).
-		UpdateColumn("text", body)
+func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) {
+
+	article := article_entity.New().
+		SetID(articleID).
+		SetBody(body).
+		SetSummary(body).
+		SetImagesAndThumbnail(images)
+
+	database.Articles.Where("id = ?", articleID).Omit("id").Updates(article)
 }
