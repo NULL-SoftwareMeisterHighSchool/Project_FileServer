@@ -41,6 +41,7 @@ func ListArticles(
 
 	for _, article := range articles {
 
+		// TODO: add thumbnail
 		elems = append(elems, &pb.ListArticleElement{
 			ArticleID: uint32(article.ID),
 			AuthorID:  uint32(article.AuthorID),

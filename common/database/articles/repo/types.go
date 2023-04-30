@@ -28,9 +28,3 @@ func DeleteByID(id uint) {
 func DeleteByAuthorID(authorID uint) {
 	database.Articles.Delete(article_entity.New().SetAuthorID(authorID))
 }
-
-func GetArticleWithBody(id uint) *article_entity.Article {
-	var article *article_entity.Article
-	database.Articles.Where("id = ?", id).Association("body").Find(article)
-	return article
-}

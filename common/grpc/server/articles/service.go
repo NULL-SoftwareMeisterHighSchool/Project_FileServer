@@ -33,8 +33,8 @@ func (ArticleServiceServer) ListArticle(ctx context.Context, request *pb.ListArt
 	)
 }
 
-func (ArticleServiceServer) GetArticle(context.Context, *pb.GetArticleRequest) (*pb.GetArticleResponse, error) {
-
+func (ArticleServiceServer) GetArticle(ctx context.Context, request *pb.GetArticleRequest) (*pb.GetArticleResponse, error) {
+	return articles.GetArticle(uint(request.GetArticleID()), uint(request.GetUserID()))
 }
 
 func (ArticleServiceServer) UpdateArticleBody(context.Context, *pb.UpdateArticleBodyRequest) (*empty.Empty, error) {

@@ -48,8 +48,8 @@ func ListArticles(
 		)
 	}
 
-	tx = tx.Select("articles.*, (?) as likes",
-		database.ArticleLikes.Where("article_id = articles.id").
+	tx = tx.Select("articles.*, (?) AS likes",
+		likesForArticleQuery.
 			Select("COUNT(*)"),
 	)
 
@@ -64,7 +64,7 @@ func ListArticles(
 		tx = tx.Order("views + (likes * 3) DESC")
 	}
 
-	tx.Offset(int(offset)).Limit(int(amount)).Find(&articles)
+	tx.Omit("images").Offset(int(offset)).Limit(int(amount)).Find(&articles)
 
 	return articles
 }
