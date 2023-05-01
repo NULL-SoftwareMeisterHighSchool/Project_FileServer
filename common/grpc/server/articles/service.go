@@ -87,8 +87,12 @@ func (ArticleServiceServer) UpdateArticleTitle(ctx context.Context, request *pb.
 	return &emptypb.Empty{}, nil
 }
 
-func (ArticleServiceServer) DeleteArticle(context.Context, *pb.DeleteArticleRequest) (*empty.Empty, error) {
+func (ArticleServiceServer) DeleteArticle(ctx context.Context, request *pb.DeleteArticleRequest) (*empty.Empty, error) {
+	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
+		return nil, statusForError(err)
+	}
 
+	return &emptypb.Empty{}, nil
 }
 
 func (ArticleServiceServer) SetArticleVisibility(context.Context, *pb.SetArticleVisibilityRequest) (*empty.Empty, error) {
