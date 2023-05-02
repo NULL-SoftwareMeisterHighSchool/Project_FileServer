@@ -11,8 +11,7 @@ func UpdateArticleBody(articleID, userID uint, body []byte) error {
 		return err
 	}
 
-	go article_repo.UpdateArticleBodyAndImages(articleID, body, util.ExtractImageURL(body))
-	return nil
+	return article_repo.UpdateArticleBodyAndImages(articleID, body, util.ExtractImageURL(body))
 }
 
 func UpdateArticleTitle(articleID, userID uint, title string) error {
@@ -20,8 +19,7 @@ func UpdateArticleTitle(articleID, userID uint, title string) error {
 		return err
 	}
 
-	go article_repo.UpdateTitleByID(articleID, title)
-	return nil
+	return article_repo.UpdateTitleByID(articleID, title)
 }
 
 func UpdateArticleVisibility(userID, articleID uint, isPrivate bool) error {
@@ -29,8 +27,7 @@ func UpdateArticleVisibility(userID, articleID uint, isPrivate bool) error {
 		return err
 	}
 
-	go article_repo.UpdateIsPrivateByID(articleID, isPrivate)
-	return nil
+	return article_repo.UpdateIsPrivateByID(articleID, isPrivate)
 }
 
 func ToggleArticleLike(userID, articleID uint) error {
@@ -38,7 +35,5 @@ func ToggleArticleLike(userID, articleID uint) error {
 		return err
 	}
 
-	go article_repo.ToggleLike(articleID, userID)
-
-	return nil
+	return article_repo.ToggleLike(articleID, userID)
 }

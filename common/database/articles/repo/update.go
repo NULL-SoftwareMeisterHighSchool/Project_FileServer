@@ -13,7 +13,7 @@ func IncreaseViewCount(articleID uint) {
 		UpdateColumn("views", gorm.Expr("views  + ?", 1))
 }
 
-func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) {
+func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) error {
 
 	article := article_entity.New().
 		SetID(articleID).
@@ -21,25 +21,28 @@ func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) {
 		SetSummary(body).
 		SetImagesAndThumbnail(images)
 
-	database.Articles.
+	tx := database.Articles.
 		Where("id = ?", articleID).
 		Omit("id").
 		Updates(article)
+	return tx.Error
 }
 
-func UpdateTitleByID(articleID uint, title string) {
-	database.Articles.
+func UpdateTitleByID(articleID uint, title string) error {
+	tx := database.Articles.
 		Where("id = ?", articleID).
 		Update("title", title)
+	return tx.Error
 }
 
-func UpdateIsPrivateByID(articleID uint, isPrivate bool) {
-	database.Articles.
+func UpdateIsPrivateByID(articleID uint, isPrivate bool) error {
+	tx := database.Articles.
 		Where("id = ?", articleID).
 		Update("isPrivate", isPrivate)
+	return tx.Error
 }
 
-func ToggleLike(articleID, userID uint) {
+func ToggleLike(articleID, userID uint) error {
 
 	var exists bool
 	it := map[string]interface{}{
@@ -52,8 +55,8 @@ func ToggleLike(articleID, userID uint) {
 		Select("COUNT(*) > 0").Find(&exists)
 
 	if exists {
-		database.ArticleLikes.Delete(it)
+		return database.ArticleLikes.Delete(it).Error
 	} else {
-		database.ArticleLikes.Create(it)
+		return database.ArticleLikes.Create(it).Error
 	}
 }

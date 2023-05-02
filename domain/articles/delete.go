@@ -10,7 +10,5 @@ func DeleteByID(userID, articleID uint) error {
 		return err
 	}
 
-	go article_repo.DeleteByID(articleID)
-
-	return nil
+	return article_repo.DeleteByID(articleID)
 }
