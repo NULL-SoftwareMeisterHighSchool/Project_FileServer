@@ -17,7 +17,7 @@ func filterDeletableImageURLByEndpoint(urls []string, endpoint string) []string 
 	return shouldDelete
 }
 
-func checkPrivateAndExists(userID, articleID uint) error {
+func CheckPrivateAndExists(userID, articleID uint) error {
 	pInfo, err := getInfoOrNotFound(articleID)
 	if err != nil {
 		return err
