@@ -4,9 +4,9 @@ import (
 	"context"
 
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles"
-	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -19,7 +19,7 @@ type ArticleServiceServer struct {
 
 func (ArticleServiceServer) CreateArticle(ctx context.Context, request *pb.CreateArticleRequest) (*empty.Empty, error) {
 	if err := articles.CreateArticle(uint(request.GetAuthorID()), request.GetTitle(), request.GetType()); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 	return &empty.Empty{}, nil
 }
@@ -56,7 +56,7 @@ func (ArticleServiceServer) ListArticleByAuthor(ctx context.Context, request *pb
 	)
 
 	if err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return res, nil
@@ -66,14 +66,14 @@ func (ArticleServiceServer) GetArticle(ctx context.Context, request *pb.GetArtic
 	res, err := articles.GetArticle(uint(request.GetArticleID()), uint(request.GetUserID()))
 
 	if err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 	return res, nil
 }
 
 func (ArticleServiceServer) UpdateArticleBody(ctx context.Context, request *pb.UpdateArticleBodyRequest) (*empty.Empty, error) {
 	if err := articles.UpdateArticleBody(uint(request.GetArticleID()), uint(request.GetUserID()), []byte(request.GetBody())); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -81,7 +81,7 @@ func (ArticleServiceServer) UpdateArticleBody(ctx context.Context, request *pb.U
 
 func (ArticleServiceServer) UpdateArticleTitle(ctx context.Context, request *pb.UpdateArticleTitleRequest) (*empty.Empty, error) {
 	if err := articles.UpdateArticleTitle(uint(request.GetArticleID()), uint(request.GetUserID()), string(request.GetTitle())); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -89,7 +89,7 @@ func (ArticleServiceServer) UpdateArticleTitle(ctx context.Context, request *pb.
 
 func (ArticleServiceServer) DeleteArticle(ctx context.Context, request *pb.DeleteArticleRequest) (*empty.Empty, error) {
 	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -97,7 +97,7 @@ func (ArticleServiceServer) DeleteArticle(ctx context.Context, request *pb.Delet
 
 func (ArticleServiceServer) SetArticleVisibility(ctx context.Context, request *pb.SetArticleVisibilityRequest) (*empty.Empty, error) {
 	if err := articles.UpdateArticleVisibility(uint(request.GetUserID()), uint(request.GetArticleID()), request.GetIsPrivate()); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -105,20 +105,8 @@ func (ArticleServiceServer) SetArticleVisibility(ctx context.Context, request *p
 
 func (ArticleServiceServer) ToggleArticleLike(ctx context.Context, request *pb.ToggleArticleLikeRequest) (*empty.Empty, error) {
 	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
-		return nil, statusForError(err)
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil
-}
-
-// err should not be nil
-func statusForError(err error) error {
-	switch err {
-	case article_errors.ErrNotFound:
-		return status.Error(codes.NotFound, err.Error())
-	case article_errors.ErrPermissionDenied:
-		return status.Error(codes.PermissionDenied, err.Error())
-	default:
-		return status.Error(codes.Unknown, err.Error())
-	}
 }
