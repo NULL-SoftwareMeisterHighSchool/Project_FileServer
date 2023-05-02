@@ -8,7 +8,7 @@ import (
 
 func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 
-	if err := checkPermissionAndExists(userID, articleID); err != nil {
+	if err := checkPrivateAndExists(userID, articleID); err != nil {
 		return nil, err
 	}
 

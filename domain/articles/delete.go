@@ -5,7 +5,7 @@ import (
 )
 
 func DeleteByID(userID, articleID uint) error {
-	if err := checkPermissionAndExists(userID, articleID); err != nil {
+	if err := checkSudoAndExists(userID, articleID); err != nil {
 		return err
 	}
 

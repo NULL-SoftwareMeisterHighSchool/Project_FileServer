@@ -95,12 +95,20 @@ func (ArticleServiceServer) DeleteArticle(ctx context.Context, request *pb.Delet
 	return &emptypb.Empty{}, nil
 }
 
-func (ArticleServiceServer) SetArticleVisibility(context.Context, *pb.SetArticleVisibilityRequest) (*empty.Empty, error) {
+func (ArticleServiceServer) SetArticleVisibility(ctx context.Context, request *pb.SetArticleVisibilityRequest) (*empty.Empty, error) {
+	if err := articles.UpdateArticleVisibility(uint(request.GetUserID()), uint(request.GetArticleID()), request.GetIsPrivate()); err != nil {
+		return nil, statusForError(err)
+	}
 
+	return &emptypb.Empty{}, nil
 }
 
-func (ArticleServiceServer) ToggleArticleLike(context.Context, *pb.ToggleArticleLikeRequest) (*empty.Empty, error) {
+func (ArticleServiceServer) ToggleArticleLike(ctx context.Context, request *pb.ToggleArticleLikeRequest) (*empty.Empty, error) {
+	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
+		return nil, statusForError(err)
+	}
 
+	return &emptypb.Empty{}, nil
 }
 
 // err should not be nil
