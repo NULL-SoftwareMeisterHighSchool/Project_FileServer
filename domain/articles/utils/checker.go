@@ -1,21 +1,9 @@
-package articles
+package article_utils
 
 import (
-	"strings"
-
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
 )
-
-func filterDeletableImageURLByEndpoint(urls []string, endpoint string) []string {
-	shouldDelete := []string{}
-	for _, url := range urls {
-		if strings.HasPrefix(url, endpoint) {
-			shouldDelete = append(shouldDelete, url)
-		}
-	}
-	return shouldDelete
-}
 
 func CheckPrivateAndExists(userID, articleID uint) error {
 	pInfo, err := getInfoOrNotFound(articleID)
@@ -29,7 +17,7 @@ func CheckPrivateAndExists(userID, articleID uint) error {
 	return nil
 }
 
-func checkSudoAndExists(userID, articleID uint) error {
+func CheckSudoAndExists(userID, articleID uint) error {
 	pInfo, err := getInfoOrNotFound(articleID)
 	if err != nil {
 		return err
@@ -41,7 +29,7 @@ func checkSudoAndExists(userID, articleID uint) error {
 	return nil
 }
 
-func checkExists(articleID uint) error {
+func CheckExists(articleID uint) error {
 	_, err := getInfoOrNotFound(articleID)
 	return err
 }
@@ -49,7 +37,7 @@ func checkExists(articleID uint) error {
 func getInfoOrNotFound(articleID uint) (*article_repo.ArticlePermissionInfo, error) {
 	pInfo, err := article_repo.GetArticlePermissionInfoByID(articleID)
 	if err != nil {
-		return nil, article_errors.ErrNotFound
+		return nil, article_errors.ErrArticleNotFound
 	}
 
 	return pInfo, nil

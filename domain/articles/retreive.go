@@ -3,12 +3,13 @@ package articles
 import (
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/articles"
+	article_utils "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/utils"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 
-	if err := CheckPrivateAndExists(userID, articleID); err != nil {
+	if err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
 		return nil, err
 	}
 

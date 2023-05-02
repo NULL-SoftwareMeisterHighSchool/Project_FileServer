@@ -28,7 +28,11 @@ func (CommentServiceServer) CreateComment(ctx context.Context, request *pb.Creat
 }
 
 func (CommentServiceServer) DeleteCommnet(ctx context.Context, request *pb.DeleteCommnetRequest) (*empty.Empty, error) {
+	if err := comments.DeleteComment(uint(request.GetCommentID()), uint(request.GetUserID())); err != nil {
+		return nil, err
+	}
 
+	return &emptypb.Empty{}, nil
 }
 
 func (CommentServiceServer) GetCommentsByArticleID(ctx context.Context, request *pb.GetCommentsByArticleIDRequest) (*pb.GetCommentsByArticleIDResponse, error) {

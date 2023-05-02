@@ -3,10 +3,11 @@ package articles
 import (
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
+	article_utils "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/utils"
 )
 
 func UpdateArticleBody(articleID, userID uint, body []byte) error {
-	if err := checkSudoAndExists(userID, articleID); err != nil {
+	if err := article_utils.CheckSudoAndExists(userID, articleID); err != nil {
 		return err
 	}
 
@@ -15,7 +16,7 @@ func UpdateArticleBody(articleID, userID uint, body []byte) error {
 }
 
 func UpdateArticleTitle(articleID, userID uint, title string) error {
-	if err := checkSudoAndExists(userID, articleID); err != nil {
+	if err := article_utils.CheckSudoAndExists(userID, articleID); err != nil {
 		return err
 	}
 
@@ -24,7 +25,7 @@ func UpdateArticleTitle(articleID, userID uint, title string) error {
 }
 
 func UpdateArticleVisibility(userID, articleID uint, isPrivate bool) error {
-	if err := checkSudoAndExists(userID, articleID); err != nil {
+	if err := article_utils.CheckSudoAndExists(userID, articleID); err != nil {
 		return err
 	}
 
@@ -33,7 +34,7 @@ func UpdateArticleVisibility(userID, articleID uint, isPrivate bool) error {
 }
 
 func ToggleArticleLike(userID, articleID uint) error {
-	if err := checkExists(articleID); err != nil {
+	if err := article_utils.CheckExists(articleID); err != nil {
 		return err
 	}
 
