@@ -32,3 +32,28 @@ func UpdateTitleByID(articleID uint, title string) {
 		Where("id = ?", articleID).
 		Update("title", title)
 }
+
+func UpdateIsPrivateByID(articleID uint, isPrivate bool) {
+	database.Articles.
+		Where("id = ?", articleID).
+		Update("isPrivate", isPrivate)
+}
+
+func ToggleLike(articleID, userID uint) {
+
+	var exists bool
+	it := map[string]interface{}{
+		"article_id": articleID,
+		"user_id":    userID,
+	}
+
+	database.ArticleLikes.
+		Where(it).
+		Select("COUNT(*) > 0").Find(&exists)
+
+	if exists {
+		database.ArticleLikes.Delete(it)
+	} else {
+		database.ArticleLikes.Create(it)
+	}
+}
