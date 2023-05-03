@@ -1,13 +1,26 @@
 package comment_repo
 
-import "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
+import (
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
+	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
+)
 
-func ExistsByIDAndArticleID(commentID, articleID uint) bool {
-	var exists bool
-	database.Comments.
+func GetOwnerByIDAndArticleID(commentID, articleID uint) (uint, error) {
+	var authorID uint
+	err := database.Comments.
 		Where("id = ? AND article_id = ?", commentID, articleID).
-		Select("COUNT(*) > 0").
-		Find(&exists)
+		Select("author_id").
+		First(&authorID).
+		Error
 
-	return exists
+	return authorID, err
+}
+
+func GetCommentsByArticleID(articleID uint) ([]*comment_entity.Comment, error) {
+	var comments []*comment_entity.Comment
+
+	tx := database.Comments.
+		Where("artilce_id = ?", articleID).
+		Find(&comments)
+	return comments, tx.Error
 }

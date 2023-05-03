@@ -3,11 +3,13 @@ package comments_server
 import (
 	"context"
 
+	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/comments"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/comments"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CommentServiceServer struct {
@@ -40,5 +42,33 @@ func (CommentServiceServer) DeleteCommnet(ctx context.Context, request *pb.Delet
 }
 
 func (CommentServiceServer) GetCommentsByArticleID(ctx context.Context, request *pb.GetCommentsByArticleIDRequest) (*pb.GetCommentsByArticleIDResponse, error) {
+	comments, err := comments.GetCommentsFromArticle(uint(request.GetUserID()), uint(request.GetArticleID()))
+	if err != nil {
+		return nil, errors.StatusForError(err)
+	}
 
+	resElems := convertIntoCommentResElems(comments)
+
+	return &pb.GetCommentsByArticleIDResponse{
+		Comments: resElems,
+	}, nil
+}
+
+func convertIntoCommentResElems(comments []*comment_entity.Comment) []*pb.CommentElem {
+	var resElems []*pb.CommentElem
+
+	for _, comment := range comments {
+
+		repl := uint32(*comment.ReplyCommentID)
+
+		resElems = append(resElems, &pb.CommentElem{
+			ArticleID: uint32(comment.ArticleID),
+			AuthorID:  uint32(comment.AuthorID),
+			CreatedAt: timestamppb.New(comment.CreatedAt),
+			Body:      comment.Body,
+			ReplyTo:   &repl,
+		})
+	}
+
+	return resElems
 }

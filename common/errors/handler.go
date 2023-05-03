@@ -39,6 +39,8 @@ func StatusForError(err error) error {
 		return status.Error(codes.PermissionDenied, err.Error())
 	case comment_errors.ErrCommentNotFound:
 		return status.Error(codes.NotFound, err.Error())
+	case comment_errors.ErrNoPermission:
+		return status.Error(codes.PermissionDenied, err.Error())
 	default:
 		return status.Error(codes.Unknown, err.Error())
 	}
