@@ -1,8 +1,11 @@
 package article_utils
 
 import (
+	"errors"
+
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
+	"gorm.io/gorm"
 )
 
 func CheckPrivateAndExists(userID, articleID uint) error {
@@ -36,8 +39,12 @@ func CheckExists(articleID uint) error {
 
 func getInfoOrNotFound(articleID uint) (*article_repo.ArticlePermissionInfo, error) {
 	pInfo, err := article_repo.GetArticlePermissionInfoByID(articleID)
+
 	if err != nil {
-		return nil, article_errors.ErrArticleNotFound
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, article_errors.ErrArticleNotFound
+		}
+		return nil, err
 	}
 
 	return pInfo, nil
