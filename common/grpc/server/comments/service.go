@@ -28,8 +28,12 @@ func (CommentServiceServer) CreateComment(ctx context.Context, request *pb.Creat
 }
 
 func (CommentServiceServer) DeleteCommnet(ctx context.Context, request *pb.DeleteCommnetRequest) (*empty.Empty, error) {
-	if err := comments.DeleteComment(uint(request.GetCommentID()), uint(request.GetUserID())); err != nil {
-		return nil, err
+	if err := comments.DeleteComment(
+		uint(request.GetCommentID()),
+		uint(request.GetUserID()),
+		uint(request.GetArticleID()),
+	); err != nil {
+		return nil, errors.StatusForError(err)
 	}
 
 	return &emptypb.Empty{}, nil

@@ -3,8 +3,8 @@ package comment_entity
 import "time"
 
 type Comment struct {
-	ID             uint
-	AuthorID       uint
+	ID             uint `gorm:"primary key"`
+	AuthorID       uint `gorm:"primary key;autoIncrement:false"`
 	ArticleID      uint
 	ReplyCommentID *uint
 	Body           string
