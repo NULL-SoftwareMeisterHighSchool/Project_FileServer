@@ -8,7 +8,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/images"
+	image_controller "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest/server/images"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -33,7 +33,7 @@ func Listen() {
 		{
 			imagesRouter.Post("",
 				middlewares.AuthorizeMiddleware,
-				images.UploadImage,
+				image_controller.UploadImage,
 			)
 			// filesystem setting. can be deleted if it uses s3 or something.
 			imagesRouter.Static("", "./contents/images")

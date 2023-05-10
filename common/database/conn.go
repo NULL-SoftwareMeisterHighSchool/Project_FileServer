@@ -7,6 +7,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
+	image_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/images/entity"
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ import (
 
 var db *gorm.DB
 var Articles = db.Model(&article_entity.Article{})
+var Images = db.Model(&image_entity.Image{})
 var ArticleBodies = db.Model(&article_entity.ArticleBody{})
 var Users = db.Model(&user_entity.User{})
 var Comments = db.Model(&comment_entity.Comment{})
@@ -38,4 +40,5 @@ func migrateDB(database *gorm.DB) {
 	ArticleBodies.AutoMigrate()
 	Users.AutoMigrate()
 	Comments.AutoMigrate()
+	Images.AutoMigrate()
 }
