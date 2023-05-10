@@ -20,8 +20,7 @@ var ErrInvalidImageExtension = fiber.NewError(
 	fmt.Sprintf("allowed file extensions are: %v", config.IMAGE_EXTENSIONS),
 )
 var ErrImageNotReceived = fiber.NewError(http.StatusBadRequest, "image not received")
-
-var ErrInvalidOrigin = fiber.NewError(http.StatusForbidden, "request origin is not valid")
+var ErrInvalidArticleID = fiber.NewError(http.StatusBadRequest, "articleID from querystring isn't valid")
 
 func CreateUnkownErr(e error) *fiber.Error {
 	return fiber.NewError(http.StatusInternalServerError, e.Error())
