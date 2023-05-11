@@ -9,7 +9,7 @@ func CreateImage(articleID uint, url string) error {
 	image := image_entity.Image{URL: url}
 
 	database.Articles.Where("id = ?", articleID).
-		Association("images").
+		Association("Images").
 		Append(&image)
 
 	return nil

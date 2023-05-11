@@ -13,13 +13,12 @@ func IncreaseViewCount(articleID uint) {
 		UpdateColumn("views", gorm.Expr("views  + ?", 1))
 }
 
-func UpdateArticleBodyAndImages(articleID uint, body []byte, images []string) error {
+func UpdateArticleBody(articleID uint, body []byte) error {
 
 	article := article_entity.New().
 		SetID(articleID).
 		SetBody(body).
-		SetSummary(body).
-		SetImagesAndThumbnail(images)
+		SetSummary(body)
 
 	tx := database.Articles.
 		Where("id = ?", articleID).

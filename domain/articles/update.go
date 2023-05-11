@@ -2,7 +2,6 @@ package articles
 
 import (
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	article_utils "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/utils"
 )
 
@@ -11,7 +10,7 @@ func UpdateArticleBody(articleID, userID uint, body []byte) error {
 		return err
 	}
 
-	return article_repo.UpdateArticleBodyAndImages(articleID, body, util.ExtractImageURL(body))
+	return article_repo.UpdateArticleBody(articleID, body)
 }
 
 func UpdateArticleTitle(articleID, userID uint, title string) error {

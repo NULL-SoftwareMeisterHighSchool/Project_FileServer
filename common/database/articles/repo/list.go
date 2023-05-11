@@ -9,7 +9,8 @@ import (
 
 type ListArticleElemWithLikes struct {
 	article_entity.Article
-	Likes uint
+	Thumbnail string
+	Likes     uint
 }
 
 func ListArticles(
@@ -48,9 +49,13 @@ func ListArticles(
 		)
 	}
 
-	tx = tx.Select("articles.*, (?) AS likes",
+	tx = tx.Select("articles.*, (?) AS likes, (?) AS thumbnail",
 		likesForArticleQuery.
 			Select("COUNT(*)"),
+		database.Images.
+			Where("article_id = articles.id").
+			Select("url").
+			Limit(1),
 	)
 
 	// tx = tx.Joins("JOIN (?) AS likes_tbl ON articles.id = likes_tbl.article_id",

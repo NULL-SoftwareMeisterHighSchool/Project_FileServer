@@ -80,7 +80,6 @@ func convertToResponseElems(articles []*repo.ListArticleElemWithLikes) []*pb.Lis
 	var elems []*pb.ListArticleElement
 
 	for _, article := range articles {
-		// TODO: add thumbnail
 		elems = append(elems, &pb.ListArticleElement{
 			ArticleID: uint32(article.ID),
 			AuthorID:  uint32(article.AuthorID),
@@ -92,6 +91,7 @@ func convertToResponseElems(articles []*repo.ListArticleElemWithLikes) []*pb.Lis
 			UpdatedAt: timestamppb.New(article.UpdatedAt),
 			Views:     article.Views,
 			Likes:     uint32(article.Likes),
+			Thumbnail: article.Thumbnail,
 		})
 	}
 

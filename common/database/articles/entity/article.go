@@ -1,10 +1,10 @@
 package article_entity
 
 import (
-	"strings"
 	"time"
 
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
+	image_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/images/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 )
 
@@ -25,12 +25,11 @@ type Article struct {
 	UpdatedAt time.Time   `gorm:"autoUpdateTime"`
 	Title     string      `gorm:"type:varchar(2048),index:,class:FULLTEXT,option:WITH PARSER ngram"`
 	Summary   string      `gorm:"type:varchar(400)"`
-	Thumbnail string      `gorm:"type:varchar(2048)"`
-	Images    string      `gorm:"type:text"`
 	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
 	Type      ArticleType `gorm:"type:tinyint"`
 	IsPrivate bool        `gorm:"type:tinyint"`
 	Views     uint64
+	Images    []*image_entity.Image     `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
 	Comments  []*comment_entity.Comment `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
 }
 
@@ -81,18 +80,4 @@ func (a *Article) SetArticleType(articleType ArticleType) *Article {
 func (a *Article) SetIsPrivate(isPrivate bool) *Article {
 	a.IsPrivate = isPrivate
 	return a
-}
-
-func (a *Article) SetImagesAndThumbnail(images []string) *Article {
-	a.Images = strings.Join(images, "^")
-	a.setThumbnail()
-	return a
-}
-
-func (a *Article) setThumbnail() {
-	if len(a.Images) == 0 {
-		a.Thumbnail = ""
-		return
-	}
-	a.Thumbnail = strings.Split(a.Images, "^")[0]
 }
