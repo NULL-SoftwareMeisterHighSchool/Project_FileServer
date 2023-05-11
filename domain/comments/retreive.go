@@ -8,7 +8,7 @@ import (
 
 func GetCommentsFromArticle(userID, articleID uint) ([]*comment_entity.Comment, error) {
 
-	if err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
+	if _, err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
 		return nil, err
 	}
 

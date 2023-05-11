@@ -6,7 +6,7 @@ import (
 )
 
 func CreateComment(articleID, userID uint, replyTo uint, body string) error {
-	if err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
+	if _, err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
 		return err
 	}
 	return comment_repo.CreateComment(articleID, userID, replyTo, body)

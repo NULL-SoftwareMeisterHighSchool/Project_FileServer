@@ -8,16 +8,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func CheckPrivateAndExists(userID, articleID uint) error {
+func CheckPrivateAndExists(userID, articleID uint) (isAuthor bool, err error) {
 	pInfo, err := getInfoOrNotFound(articleID)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	if pInfo.IsPrivate && pInfo.AuthorID != userID {
-		return article_errors.ErrPermissionDenied
+	isAuthor = pInfo.AuthorID == userID
+
+	if pInfo.IsPrivate && !isAuthor {
+		return isAuthor, article_errors.ErrPermissionDenied
 	}
-	return nil
+	return isAuthor, nil
 }
 
 func CheckSudoAndExists(userID, articleID uint) error {

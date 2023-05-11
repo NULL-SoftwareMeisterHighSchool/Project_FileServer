@@ -9,7 +9,8 @@ import (
 
 func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 
-	if err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
+	isAuthor, err := article_utils.CheckPrivateAndExists(userID, articleID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -29,5 +30,6 @@ func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 		Likes:     uint32(article.Likes),
 		IsPrivate: article.IsPrivate,
 		IsLiked:   article.IsLiked,
+		IsAuthor:  isAuthor,
 	}, nil
 }

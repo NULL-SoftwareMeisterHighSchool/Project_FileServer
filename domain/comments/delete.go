@@ -8,7 +8,7 @@ import (
 
 func DeleteComment(commentID, userID, articleID uint) error {
 
-	if err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
+	if _, err := article_utils.CheckPrivateAndExists(userID, articleID); err != nil {
 		return err
 	}
 	if err := comment_utils.CheckPermissionAndExists(commentID, articleID, userID); err != nil {
