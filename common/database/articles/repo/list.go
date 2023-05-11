@@ -43,10 +43,13 @@ func ListArticles(
 	}
 
 	if query != "" {
-		tx = tx.Where("MATCH(title) AGAINST (?)", query).Or("id IN (?)",
-			database.ArticleBodies.
-				Where("MATCH(text) AGAINST (?)", query).Select("article_id"),
-		)
+		tx = tx.
+			Where("MATCH(title) AGAINST (?)", query).
+			Or("id IN (?)",
+				database.ArticleBodies.
+					Where("MATCH(text) AGAINST (?)", query).
+					Select("article_id"),
+			)
 	}
 
 	tx = tx.Select("articles.*, (?) AS likes, (?) AS thumbnail",
@@ -69,7 +72,7 @@ func ListArticles(
 		tx = tx.Order("views + (likes * 3) DESC")
 	}
 
-	tx.Omit("images").Offset(int(offset)).Limit(int(amount)).Find(&articles)
+	tx.Offset(int(offset)).Limit(int(amount)).Find(&articles)
 
 	return articles
 }

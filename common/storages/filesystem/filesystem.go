@@ -16,9 +16,9 @@ func Get() *fs {
 	return &fs{}
 }
 
-func (fs) DeleteImages(names []string) {
-	for _, name := range names {
-		os.Remove(getImagePath(name))
+func (fs) DeleteImages(urls []string) {
+	for _, url := range urls {
+		os.Remove(getImagePath(getSuffixFromURL(url)))
 	}
 }
 

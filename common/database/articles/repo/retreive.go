@@ -1,11 +1,8 @@
 package article_repo
 
 import (
-	"errors"
-
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
-	"gorm.io/gorm"
 )
 
 type ArticlePermissionInfo struct {
@@ -41,11 +38,10 @@ func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {
 			Select("COUNT(*) > 0"),
 	)
 
-	tx = tx.Joins("ArticleBody").Omit("summary", "thumbnail", "images").First(&article)
+	tx = tx.Joins("ArticleBody").Omit("summary", "images").First(&article)
 
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+	if tx.Error != nil {
 		return nil, tx.Error
 	}
-
 	return &article, nil
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Storage interface {
-	DeleteImages(names []string)
+	DeleteImages(urls []string)
 	UploadImage(name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
