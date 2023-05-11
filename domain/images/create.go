@@ -27,7 +27,7 @@ func UploadImage(userID, articleID uint, image *multipart.FileHeader) (string, *
 	}
 
 	var url string
-	if url, err = storage.UploadImage(userID, name, extension, image); err != nil {
+	if url, err = storage.UploadImage(name, extension, image); err != nil {
 		return "", errors.CreateUnkownErr(err)
 	}
 

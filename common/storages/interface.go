@@ -8,9 +8,8 @@ import (
 )
 
 type Storage interface {
-	DeleteImages(authorID uint, suffixes []string)
-	GetSuffixesFromURLs(urls []string) []string
-	UploadImage(authorID uint, name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
+	DeleteImages(names []string)
+	UploadImage(name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
 var storage Storage = filesystem.Get()
