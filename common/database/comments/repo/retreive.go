@@ -20,7 +20,7 @@ func GetCommentsByArticleID(articleID uint) ([]*comment_entity.Comment, error) {
 	var comments []*comment_entity.Comment
 
 	tx := database.Comments.
-		Where("artilce_id = ?", articleID).
+		Where("article_id = ?", articleID).
 		Find(&comments)
 	return comments, tx.Error
 }
