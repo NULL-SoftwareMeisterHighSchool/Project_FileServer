@@ -53,7 +53,7 @@ func ListArticles(
 	}
 
 	tx = tx.Select("articles.*, (?) AS likes, (?) AS thumbnail",
-		likesForArticleQuery.
+		LikesForArticleQuery().
 			Select("COUNT(*)"),
 		database.Images.
 			Where("article_id = articles.id").

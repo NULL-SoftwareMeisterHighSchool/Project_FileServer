@@ -31,9 +31,9 @@ func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {
 	tx := database.Articles.Where("id = ?", id)
 
 	tx = tx.Select("articles.*, (?) AS likes, (?) AS is_liked",
-		likesForArticleQuery.
+		LikesForArticleQuery().
 			Select("COUNT(*)"),
-		likesForArticleQuery.
+		LikesForArticleQuery().
 			Where("user_id = ? AND user_id != 0", userID).
 			Select("COUNT(*) > 0"),
 	)
