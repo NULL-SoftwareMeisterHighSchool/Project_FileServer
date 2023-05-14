@@ -33,8 +33,8 @@ func Connect() {
 		log.Fatalf("cannot open db: %s", err)
 	}
 
+	migrateDB(db)
 	loadTables(db)
-	migrateDB()
 }
 
 func loadTables(db *gorm.DB) {
@@ -46,10 +46,14 @@ func loadTables(db *gorm.DB) {
 	ArticleLikes = db.Table("user_likes")
 }
 
-func migrateDB() {
-	Articles.AutoMigrate()
-	ArticleBodies.AutoMigrate()
-	Users.AutoMigrate()
-	Comments.AutoMigrate()
-	Images.AutoMigrate()
+func migrateDB(db *gorm.DB) {
+	if err := db.AutoMigrate(
+		&user_entity.User{},
+		&article_entity.Article{},
+		&article_entity.ArticleBody{},
+		&image_entity.Image{},
+		&comment_entity.Comment{},
+	); err != nil {
+		log.Fatalf("cannot migrate db: %v", err)
+	}
 }

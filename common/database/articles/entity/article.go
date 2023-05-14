@@ -5,6 +5,7 @@ import (
 
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	image_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/images/entity"
+	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 )
 
@@ -17,25 +18,26 @@ const (
 	TYPE_TECH
 )
 
-// should change those urls into url.URL type
 type Article struct {
-	ID        uint        `gorm:"autoIncrement"`
-	AuthorID  uint        `gorm:"not null"`
-	CreatedAt time.Time   `gorm:"autoCreateTime"`
-	UpdatedAt time.Time   `gorm:"autoUpdateTime"`
-	Title     string      `gorm:"type:varchar(2048),index:,class:FULLTEXT,option:WITH PARSER ngram"`
-	Summary   string      `gorm:"type:varchar(400)"`
-	Body      ArticleBody `gorm:"constraint:OnDelete:CASCADE"`
-	Type      ArticleType `gorm:"type:tinyint"`
-	IsPrivate bool        `gorm:"type:tinyint"`
+	ID        uint              `gorm:"autoIncrement"`
+	AuthorID  uint              `gorm:"not null"`
+	Author    *user_entity.User `gorm:"foreignKey:AuthorID;constraint:OnDelete:CASCADE;"`
+	CreatedAt time.Time         `gorm:"autoCreateTime"`
+	UpdatedAt time.Time         `gorm:"autoUpdateTime"`
+	Title     string            `gorm:"type:varchar(2048);index:,class:FULLTEXT,option:WITH PARSER ngram"`
+	Summary   string            `gorm:"type:varchar(400)"`
+	Body      ArticleBody       `gorm:"constraint:OnDelete:CASCADE"`
+	Type      ArticleType       `gorm:"type:tinyint"`
+	IsPrivate bool              `gorm:"type:tinyint"`
 	Views     uint64
-	Images    []*image_entity.Image     `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
-	Comments  []*comment_entity.Comment `gorm:"foreignKey:ArticleID,constraint:OnDelete:CASCADE;"`
+	Likes     []*user_entity.User       `gorm:"many2many:user_likes;"`
+	Images    []*image_entity.Image     `gorm:"constraint:OnDelete:CASCADE;"`
+	Comments  []*comment_entity.Comment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type ArticleBody struct {
 	ArticleID uint
-	Text      []byte `gorm:"type:longtext,index:,class:FULLTEXT,option:WITH PARSER ngram"`
+	Text      []byte `gorm:"type:longtext;index:,class:FULLTEXT,option:WITH PARSER ngram"`
 }
 
 func New() *Article {
