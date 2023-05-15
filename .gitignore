@@ -1,2 +1,4 @@
 contents/
+resources/
 .env
+.test.env
