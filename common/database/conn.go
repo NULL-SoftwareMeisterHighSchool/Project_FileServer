@@ -20,6 +20,7 @@ var (
 	Users         *gorm.DB
 	Comments      *gorm.DB
 	ArticleLikes  *gorm.DB
+	DB            *gorm.DB
 )
 
 func Connect() {
@@ -32,6 +33,8 @@ func Connect() {
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
+
+	DB = db
 
 	migrateDB(db)
 	loadTables(db)
