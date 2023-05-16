@@ -19,13 +19,14 @@ func TestUploadImage(t *testing.T) {
 
 	// Setup
 	e2e_test.Setup(t)
+	defer e2e_test.TearDown(t)
 
 	app := fiber.New()
 	app.Post("/images",
 		// fake userID
 		func(c *fiber.Ctx) error {
-			c.Locals("userID", 1)
-			return nil
+			c.Locals("userID", uint(1))
+			return c.Next()
 		},
 		image_controller.UploadImage,
 	)
@@ -35,9 +36,11 @@ func TestUploadImage(t *testing.T) {
 	w := multipart.NewWriter(pw)
 
 	go func() {
-		defer w.Close()
-		part, _ := w.CreateFormFile("image", "unkown.png")
-		file, _ := os.Open("resources/unknown.png")
+		part, _ := w.CreateFormFile("image", "unknown.png")
+		file, _ := os.Open("../resources/unknown.png")
+		defer file.Close()
+		defer pw.Close()
+
 		img, _ := png.Decode(file)
 		png.Encode(part, img)
 	}()
@@ -46,9 +49,10 @@ func TestUploadImage(t *testing.T) {
 	req := httptest.NewRequest("POST", "/images?articleID=1", pr)
 	req.Header.Add("Content-Type", w.FormDataContentType())
 
-	res, err := app.Test(req, 1)
+	res, err := app.Test(req)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	// Read Response
@@ -59,23 +63,24 @@ func TestUploadImage(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		t.Error("wtf it didn't accept", string(b))
+		t.Error("wtf it didn't accept:", string(b))
+		return
 	}
 
 	var url struct{ URL string }
 	if err := json.Unmarshal(b, &url); err != nil {
 		t.Error(err)
+		return
 	}
 
 	res, err = http.DefaultClient.Get(url.URL)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		t.Errorf("no image found on path: %s. status: %d", url.URL, res.StatusCode)
+		return
 	}
-
-	// Tear Down
-	e2e_test.TearDown(t)
 }
