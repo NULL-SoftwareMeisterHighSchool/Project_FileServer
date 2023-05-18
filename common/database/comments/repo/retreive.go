@@ -7,7 +7,7 @@ import (
 
 func GetOwnerByIDAndArticleID(commentID, articleID uint) (uint, error) {
 	var authorID uint
-	err := database.Comments.
+	err := database.Comments().
 		Where("id = ? AND article_id = ?", commentID, articleID).
 		Select("author_id").
 		First(&authorID).
@@ -19,7 +19,7 @@ func GetOwnerByIDAndArticleID(commentID, articleID uint) (uint, error) {
 func GetCommentsByArticleID(articleID uint) ([]*comment_entity.Comment, error) {
 	var comments []*comment_entity.Comment
 
-	tx := database.Comments.
+	tx := database.Comments().
 		Where("article_id = ?", articleID).
 		Find(&comments)
 	return comments, tx.Error

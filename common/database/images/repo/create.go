@@ -11,6 +11,6 @@ func CreateImage(articleID uint, url string) error {
 		URL:       url,
 	}
 
-	database.Images.Create(&image)
+	database.Images().Create(&image)
 	return nil
 }

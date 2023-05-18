@@ -6,6 +6,6 @@ import (
 )
 
 func DeleteUserByID(userID uint) error {
-	tx := database.Users.Delete(&user_entity.User{ID: userID})
+	tx := database.Users().Delete(&user_entity.User{ID: userID})
 	return tx.Error
 }

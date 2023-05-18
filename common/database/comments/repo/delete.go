@@ -6,7 +6,7 @@ import (
 )
 
 func DeleteComment(commentID, articleID uint) error {
-	tx := database.Comments.
+	tx := database.Comments().
 		Where("id = ? AND article_id = ?", commentID, articleID).
 		Delete(&comment_entity.Comment{})
 	return tx.Error

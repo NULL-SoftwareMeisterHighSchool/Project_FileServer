@@ -13,15 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	Articles      *gorm.DB
-	Images        *gorm.DB
-	ArticleBodies *gorm.DB
-	Users         *gorm.DB
-	Comments      *gorm.DB
-	ArticleLikes  *gorm.DB
-	DB            *gorm.DB
-)
+var db *gorm.DB
 
 func Connect() {
 	dsn := fmt.Sprintf(
@@ -29,24 +21,14 @@ func Connect() {
 		config.DB_USER, config.DB_PASS, config.DB_HOST, config.DB_NAME,
 	)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	d, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
 
-	DB = db
+	db = d
 
 	migrateDB(db)
-	loadTables(db)
-}
-
-func loadTables(db *gorm.DB) {
-	Articles = db.Model(&article_entity.Article{})
-	Images = db.Model(&image_entity.Image{})
-	ArticleBodies = db.Model(&article_entity.ArticleBody{})
-	Users = db.Model(&user_entity.User{})
-	Comments = db.Model(&comment_entity.Comment{})
-	ArticleLikes = db.Table("user_likes")
 }
 
 func migrateDB(db *gorm.DB) {
@@ -59,4 +41,32 @@ func migrateDB(db *gorm.DB) {
 	); err != nil {
 		log.Fatalf("cannot migrate db: %v", err)
 	}
+}
+
+func Articles() *gorm.DB {
+	return db.Model(&article_entity.Article{})
+}
+
+func Images() *gorm.DB {
+	return db.Model(&image_entity.Image{})
+}
+
+func ArticleBodies() *gorm.DB {
+	return db.Model(&article_entity.ArticleBody{})
+}
+
+func Users() *gorm.DB {
+	return db.Model(&user_entity.User{})
+}
+
+func Comments() *gorm.DB {
+	return db.Model(&comment_entity.Comment{})
+}
+
+func ArticleLikes() *gorm.DB {
+	return db.Table("user_likes")
+}
+
+func DB() *gorm.DB {
+	return db
 }

@@ -18,7 +18,7 @@ type ArticleWithBodyAndLikes struct {
 
 func GetArticlePermissionInfoByID(id uint) (*ArticlePermissionInfo, error) {
 	var info = &ArticlePermissionInfo{}
-	err := database.Articles.
+	err := database.Articles().
 		Where("id = ?", id).
 		First(info).
 		Error
@@ -28,7 +28,7 @@ func GetArticlePermissionInfoByID(id uint) (*ArticlePermissionInfo, error) {
 func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {
 	var article ArticleWithBodyAndLikes
 
-	tx := database.Articles.Where("id = ?", id)
+	tx := database.Articles().Where("id = ?", id)
 
 	tx = tx.Select("articles.*, (?) AS likes, (?) AS is_liked",
 		LikesForArticleQuery().

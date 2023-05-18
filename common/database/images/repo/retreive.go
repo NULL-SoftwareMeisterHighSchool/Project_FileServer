@@ -5,7 +5,7 @@ import "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/data
 func GetURLsByArticleID(articleID uint) []string {
 	var urls []string
 
-	database.Images.
+	database.Images().
 		Where("article_id = ?", articleID).
 		Select("url").
 		Find(&urls)

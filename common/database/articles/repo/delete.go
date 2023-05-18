@@ -6,11 +6,11 @@ import (
 )
 
 func DeleteByID(id uint) error {
-	tx := database.Articles.Delete(article_entity.New().SetID(id))
+	tx := database.Articles().Delete(article_entity.New().SetID(id))
 	return tx.Error
 }
 
 func DeleteByAuthorID(authorID uint) error {
-	tx := database.Articles.Delete(article_entity.New().SetAuthorID(authorID))
+	tx := database.Articles().Delete(article_entity.New().SetAuthorID(authorID))
 	return tx.Error
 }

@@ -17,6 +17,6 @@ func CreateComment(articleID, userID uint, replyTo uint, body string) error {
 		comment.ReplyCommentID = &replyTo
 	}
 
-	tx := database.Comments.Create(&comment)
+	tx := database.Comments().Create(&comment)
 	return tx.Error
 }

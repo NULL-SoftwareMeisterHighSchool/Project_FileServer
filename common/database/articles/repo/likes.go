@@ -6,5 +6,5 @@ import (
 )
 
 func LikesForArticleQuery() *gorm.DB {
-	return database.ArticleLikes.Where("article_id = articles.id")
+	return database.ArticleLikes().Where("article_id = articles.id")
 }

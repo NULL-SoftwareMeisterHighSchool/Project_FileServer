@@ -1,6 +1,7 @@
 package article_repo
 
 import (
+	"log"
 	"time"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
@@ -26,8 +27,8 @@ func ListArticles(
 ) []*ListArticleElemWithLikes {
 
 	var articles []*ListArticleElemWithLikes
+	tx := database.Articles()
 
-	tx := database.Articles
 	tx = tx.Where("created_at BETWEEN ? AND ?", start, end)
 
 	if articleType != ALL {
@@ -43,10 +44,11 @@ func ListArticles(
 	}
 
 	if query != "" {
+		log.Println("search for query..")
 		tx = tx.
 			Where("MATCH(title) AGAINST (?)", query).
 			Or("id IN (?)",
-				database.ArticleBodies.
+				database.ArticleBodies().
 					Where("MATCH(text) AGAINST (?)", query).
 					Select("article_id"),
 			)
@@ -55,7 +57,7 @@ func ListArticles(
 	tx = tx.Select("articles.*, (?) AS likes, (?) AS thumbnail",
 		LikesForArticleQuery().
 			Select("COUNT(*)"),
-		database.Images.
+		database.Images().
 			Where("article_id = articles.id").
 			Select("url").
 			Limit(1),

@@ -8,7 +8,7 @@ import (
 
 func IncreaseViewCount(articleID uint) {
 	// might need to seperate the views into table. someday
-	database.Articles.
+	database.Articles().
 		Where("id = ?", articleID).
 		UpdateColumn("views", gorm.Expr("views  + ?", 1))
 }
@@ -20,7 +20,7 @@ func UpdateArticleBody(articleID uint, body []byte) error {
 		SetBody(body).
 		SetSummary(body)
 
-	tx := database.Articles.
+	tx := database.Articles().
 		Where("id = ?", articleID).
 		Omit("id").
 		Updates(article)
@@ -28,16 +28,16 @@ func UpdateArticleBody(articleID uint, body []byte) error {
 }
 
 func UpdateTitleByID(articleID uint, title string) error {
-	tx := database.Articles.
+	tx := database.Articles().
 		Where("id = ?", articleID).
 		Update("title", title)
 	return tx.Error
 }
 
 func UpdateIsPrivateByID(articleID uint, isPrivate bool) error {
-	tx := database.Articles.
+	tx := database.Articles().
 		Where("id = ?", articleID).
-		Update("isPrivate", isPrivate)
+		Update("is_private", isPrivate)
 	return tx.Error
 }
 
@@ -49,13 +49,13 @@ func ToggleLike(articleID, userID uint) error {
 		"user_id":    userID,
 	}
 
-	database.ArticleLikes.
+	database.ArticleLikes().
 		Where(it).
 		Select("COUNT(*) > 0").Find(&exists)
 
 	if exists {
-		return database.ArticleLikes.Delete(it).Error
+		return database.ArticleLikes().Delete(it).Error
 	} else {
-		return database.ArticleLikes.Create(it).Error
+		return database.ArticleLikes().Create(it).Error
 	}
 }

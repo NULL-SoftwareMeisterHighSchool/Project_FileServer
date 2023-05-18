@@ -6,6 +6,6 @@ import (
 )
 
 func CreateUserByID(userID uint) error {
-	tx := database.Users.Create(&user_entity.User{ID: userID})
+	tx := database.Users().Create(&user_entity.User{ID: userID})
 	return tx.Error
 }
