@@ -24,7 +24,6 @@ import (
 func TestUploadImage(t *testing.T) {
 
 	const userID uint = 1
-	const articleID uint = 1
 
 	// Setup
 	e2e_test.Setup(t)
@@ -32,7 +31,8 @@ func TestUploadImage(t *testing.T) {
 	if err := user_repo.CreateUserByID(userID); err != nil {
 		t.Error(err)
 	}
-	if err := article_repo.CreateArticle(userID, "", article_entity.TYPE_GENERAL); err != nil {
+	articleID, err := article_repo.CreateArticle(userID, "", article_entity.TYPE_GENERAL)
+	if err != nil {
 		t.Error(err)
 	}
 

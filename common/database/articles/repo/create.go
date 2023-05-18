@@ -5,7 +5,7 @@ import (
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 )
 
-func CreateArticle(authorID uint, title string, articleType article_entity.ArticleType) error {
+func CreateArticle(authorID uint, title string, articleType article_entity.ArticleType) (uint, error) {
 	article := article_entity.New().
 		SetAuthorID(authorID).
 		SetTitle(title).
@@ -13,5 +13,5 @@ func CreateArticle(authorID uint, title string, articleType article_entity.Artic
 		SetIsPrivate(true)
 
 	tx := database.Articles.Create(&article)
-	return tx.Error
+	return article.ID, tx.Error
 }

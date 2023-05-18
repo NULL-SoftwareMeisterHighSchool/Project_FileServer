@@ -35,7 +35,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleServiceClient interface {
-	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error)
 	ListArticle(ctx context.Context, in *ListArticleRequest, opts ...grpc.CallOption) (*ListArticleResponse, error)
 	ListArticleByAuthor(ctx context.Context, in *ListArticleByAuthorRequest, opts ...grpc.CallOption) (*ListArticleResponse, error)
 	GetArticle(ctx context.Context, in *GetArticleRequest, opts ...grpc.CallOption) (*GetArticleResponse, error)
@@ -54,8 +54,8 @@ func NewArticleServiceClient(cc grpc.ClientConnInterface) ArticleServiceClient {
 	return &articleServiceClient{cc}
 }
 
-func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error) {
+	out := new(CreateArticleResponse)
 	err := c.cc.Invoke(ctx, ArticleService_CreateArticle_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -139,7 +139,7 @@ func (c *articleServiceClient) ToggleArticleLike(ctx context.Context, in *Toggle
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
 type ArticleServiceServer interface {
-	CreateArticle(context.Context, *CreateArticleRequest) (*empty.Empty, error)
+	CreateArticle(context.Context, *CreateArticleRequest) (*CreateArticleResponse, error)
 	ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error)
 	ListArticleByAuthor(context.Context, *ListArticleByAuthorRequest) (*ListArticleResponse, error)
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleResponse, error)
@@ -155,7 +155,7 @@ type ArticleServiceServer interface {
 type UnimplementedArticleServiceServer struct {
 }
 
-func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateArticleRequest) (*empty.Empty, error) {
+func (UnimplementedArticleServiceServer) CreateArticle(context.Context, *CreateArticleRequest) (*CreateArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateArticle not implemented")
 }
 func (UnimplementedArticleServiceServer) ListArticle(context.Context, *ListArticleRequest) (*ListArticleResponse, error) {

@@ -17,11 +17,12 @@ type ArticleServiceServer struct {
 	pb.UnimplementedArticleServiceServer
 }
 
-func (ArticleServiceServer) CreateArticle(ctx context.Context, request *pb.CreateArticleRequest) (*empty.Empty, error) {
-	if err := articles.CreateArticle(uint(request.GetAuthorID()), request.GetTitle(), request.GetType()); err != nil {
+func (ArticleServiceServer) CreateArticle(ctx context.Context, request *pb.CreateArticleRequest) (*pb.CreateArticleResponse, error) {
+	res, err := articles.CreateArticle(uint(request.GetAuthorID()), request.GetTitle(), request.GetType())
+	if err != nil {
 		return nil, errors.StatusForError(err)
 	}
-	return &empty.Empty{}, nil
+	return res, nil
 }
 
 func (ArticleServiceServer) ListArticle(ctx context.Context, request *pb.ListArticleRequest) (*pb.ListArticleResponse, error) {
