@@ -16,7 +16,7 @@ import (
 )
 
 func Setup(t *testing.T) {
-	if err := godotenv.Load("../.test.env"); err != nil {
+	if err := godotenv.Load("../../.test.env"); err != nil {
 		t.Fatalf("cannot load .test.env: %v", err)
 	}
 	config.LoadEnv()

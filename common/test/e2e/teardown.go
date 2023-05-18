@@ -12,7 +12,7 @@ import (
 )
 
 func tearDown(t *testing.T) {
-	if err := database.DB.Migrator().DropTable(
+	if err := database.DB().Migrator().DropTable(
 		&article_entity.Article{},
 		&article_entity.ArticleBody{},
 		&comment_entity.Comment{},
