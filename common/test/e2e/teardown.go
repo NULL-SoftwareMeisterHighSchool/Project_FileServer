@@ -11,7 +11,7 @@ import (
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 )
 
-func TearDown(t *testing.T) {
+func tearDown(t *testing.T) {
 	if err := database.DB.Migrator().DropTable(
 		&article_entity.Article{},
 		&article_entity.ArticleBody{},

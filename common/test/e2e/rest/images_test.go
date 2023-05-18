@@ -28,7 +28,6 @@ func TestUploadImage(t *testing.T) {
 
 	// Setup
 	e2e_test.Setup(t)
-	defer e2e_test.TearDown(t)
 
 	if err := user_repo.CreateUserByID(userID); err != nil {
 		t.Error(err)
