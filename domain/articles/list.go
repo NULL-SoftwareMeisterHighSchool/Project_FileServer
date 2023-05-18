@@ -70,7 +70,7 @@ func convertDurationOrDefault(duration *pb.Duration) (start time.Time, end time.
 		end = time.Unix(duration.GetEnd().GetSeconds(), 0)
 	} else {
 		now := time.Now()
-		start = now.AddDate(0, 1, 0) // a month ago
+		start = now.AddDate(0, -1, 0) // a month ago
 		end = now
 	}
 	return
