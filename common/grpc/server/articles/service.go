@@ -89,7 +89,7 @@ func (ArticleServiceServer) UpdateArticleTitle(ctx context.Context, request *pb.
 }
 
 func (ArticleServiceServer) DeleteArticle(ctx context.Context, request *pb.DeleteArticleRequest) (*empty.Empty, error) {
-	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
+	if err := articles.DeleteByID(uint(request.GetUserID()), uint(request.GetArticleID())); err != nil {
 		return nil, errors.StatusForError(err)
 	}
 
