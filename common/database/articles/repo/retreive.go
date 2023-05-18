@@ -17,7 +17,7 @@ type ArticleWithBodyAndLikes struct {
 }
 
 func GetArticlePermissionInfoByID(id uint) (*ArticlePermissionInfo, error) {
-	var info *ArticlePermissionInfo
+	var info = &ArticlePermissionInfo{}
 	err := database.Articles.
 		Where("id = ?", id).
 		First(info).

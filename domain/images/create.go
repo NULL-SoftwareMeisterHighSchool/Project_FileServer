@@ -23,7 +23,7 @@ func UploadImage(userID, articleID uint, image *multipart.FileHeader) (string, *
 	storage := storages.Get()
 
 	if err := article_utils.CheckSudoAndExists(userID, articleID); err != nil {
-		return "", errors.ErrNoPermission
+		return "", errors.ErrNoPermission(err)
 	}
 
 	var url string

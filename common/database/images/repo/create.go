@@ -6,11 +6,11 @@ import (
 )
 
 func CreateImage(articleID uint, url string) error {
-	image := image_entity.Image{URL: url}
+	image := image_entity.Image{
+		ArticleID: articleID,
+		URL:       url,
+	}
 
-	database.Articles.Where("id = ?", articleID).
-		Association("Images").
-		Append(&image)
-
+	database.Images.Create(&image)
 	return nil
 }

@@ -1,6 +1,7 @@
 package e2e_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
@@ -14,4 +15,6 @@ func Setup(t *testing.T) {
 	}
 	config.LoadEnv()
 	database.Connect()
+
+	os.MkdirAll("./contents/images", 0755)
 }
