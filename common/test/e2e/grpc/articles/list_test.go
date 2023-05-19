@@ -2,7 +2,6 @@ package grpc_article_test
 
 import (
 	"context"
-	"log"
 	"testing"
 
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
@@ -29,10 +28,10 @@ func TestListArticles(t *testing.T) {
 	generalArticleID, _ := article_repo.CreateArticle(userID, "", article_entity.TYPE_GENERAL)
 	article_repo.UpdateIsPrivateByID(generalArticleID, false)
 
-	techArticleID, _ := article_repo.CreateArticle(userID, "", article_entity.TYPE_TECH)
+	techArticleID, _ := article_repo.CreateArticle(anotherUserID, "", article_entity.TYPE_TECH)
 	article_repo.UpdateIsPrivateByID(techArticleID, false)
 
-	titledArticleID, _ := article_repo.CreateArticle(userID, "what's up", article_entity.TYPE_GENERAL)
+	titledArticleID, _ := article_repo.CreateArticle(userID, "what's up kimwonwuk", article_entity.TYPE_GENERAL)
 	article_repo.UpdateIsPrivateByID(titledArticleID, false)
 
 	fulltextArticleID, _ := article_repo.CreateArticle(anotherUserID, "this is fulltext", article_entity.TYPE_TECH)
@@ -58,5 +57,55 @@ func TestListArticles(t *testing.T) {
 		t.Errorf("expected: %d articles. got: %+#v", articleCount, list.GetArticles())
 	}
 
-	log.Println(generalArticleID, techArticleID, titledArticleID)
+	// only general
+	list, _ := client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
+		Offset: 0,
+		Amount: 10,
+		Order:  articles_pb.ListArticleOrder_POPULARITY,
+		Type:   articles_pb.ArticleType_GENERAL,
+	})
+	if len(list.GetArticles()) != 2 {
+		t.Errorf("expected: %d articles. got: %+#v", 2, list.GetArticles())
+	} else if articleType := list.GetArticles()[0].Type; articleType != articles_pb.ArticleType_GENERAL {
+		t.Errorf("wrong article type. expected: %d, got: %d", articles_pb.ArticleType_GENERAL, articleType)
+	}
+
+	// by user
+	aUserID := uint32(anotherUserID)
+	list, _ = client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
+		Offset:   0,
+		Amount:   10,
+		AuthorID: &aUserID,
+	})
+	if len(list.GetArticles()) != 2 {
+		t.Errorf("expected: %d articles. got: %+#v", 2, list.GetArticles())
+	} else if authorID := list.GetArticles()[0].AuthorID; authorID != aUserID {
+		t.Errorf("wrong article type. expected: %d, got: %d", aUserID, authorID)
+	}
+
+	// query for title
+	query := "kimwonwuk"
+	list, _ = client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
+		Offset: 0,
+		Amount: 10,
+		Query:  &query,
+	})
+	if len(list.GetArticles()) != 1 {
+		t.Errorf("expected: %d articles. got: %+#v", 1, list.GetArticles())
+	} else if id := list.GetArticles()[0].ArticleID; id != uint32(titledArticleID) {
+		t.Errorf("wrong article type. expected: %d, got: %d", titledArticleID, id)
+	}
+
+	// query for content
+	query = "ipsum"
+	list, _ = client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
+		Offset: 0,
+		Amount: 10,
+		Query:  &query,
+	})
+	if len(list.GetArticles()) != 1 {
+		t.Errorf("expected: %d article. got: %+#v", 1, list.GetArticles())
+	} else if id := list.GetArticles()[0].ArticleID; id != uint32(fulltextArticleID) {
+		t.Errorf("wrong article type. expected: %d, got: %d", fulltextArticleID, id)
+	}
 }

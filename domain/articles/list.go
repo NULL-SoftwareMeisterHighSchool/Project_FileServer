@@ -85,7 +85,7 @@ func convertToResponseElems(articles []*repo.ListArticleElemWithLikes) []*pb.Lis
 			AuthorID:  uint32(article.AuthorID),
 			Title:     article.Title,
 			Summary:   article.Summary,
-			Type:      pb.ArticleType(article.Type),
+			Type:      pb.ArticleType(article.Type + 1),
 			IsPrivate: article.IsPrivate,
 			CreatedAt: timestamppb.New(article.CreatedAt),
 			UpdatedAt: timestamppb.New(article.UpdatedAt),
