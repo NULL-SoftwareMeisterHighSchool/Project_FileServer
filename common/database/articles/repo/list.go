@@ -1,7 +1,6 @@
 package article_repo
 
 import (
-	"log"
 	"time"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
@@ -44,7 +43,6 @@ func ListArticles(
 	}
 
 	if query != "" {
-		log.Println("search for query..")
 		tx = tx.
 			Where("MATCH(title) AGAINST (?)", query).
 			Or("id IN (?)",

@@ -37,7 +37,7 @@ type Article struct {
 
 type ArticleBody struct {
 	ArticleID uint
-	Text      []byte `gorm:"type:longtext;index:,class:FULLTEXT,option:WITH PARSER ngram"`
+	Text      string `gorm:"type:longtext;index:,class:FULLTEXT,option:WITH PARSER ngram"`
 }
 
 func New() *Article {
@@ -51,14 +51,6 @@ func (a *Article) SetID(articleID uint) *Article {
 
 func (a *Article) SetAuthorID(authorID uint) *Article {
 	a.AuthorID = authorID
-	return a
-}
-
-func (a *Article) SetBody(body []byte) *Article {
-	a.Body = ArticleBody{
-		ArticleID: a.ID,
-		Text:      body,
-	}
 	return a
 }
 

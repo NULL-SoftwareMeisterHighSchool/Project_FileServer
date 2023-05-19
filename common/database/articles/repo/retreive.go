@@ -38,7 +38,10 @@ func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {
 			Select("COUNT(*) > 0"),
 	)
 
-	tx = tx.Joins("ArticleBody").Omit("summary", "images").First(&article)
+	tx = tx.Joins("JOIN article_bodies AS bodies ON bodies.article_id = articles.id").
+		Select("bodies.text").
+		Omit("summary", "images").
+		First(&article)
 
 	if tx.Error != nil {
 		return nil, tx.Error

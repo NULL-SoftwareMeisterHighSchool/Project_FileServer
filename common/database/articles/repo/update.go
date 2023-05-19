@@ -1,6 +1,8 @@
 package article_repo
 
 import (
+	"errors"
+
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 	"gorm.io/gorm"
@@ -17,14 +19,23 @@ func UpdateArticleBody(articleID uint, body []byte) error {
 
 	article := article_entity.New().
 		SetID(articleID).
-		SetBody(body).
 		SetSummary(body)
 
 	tx := database.Articles().
 		Where("id = ?", articleID).
 		Omit("id").
 		Updates(article)
-	return tx.Error
+
+	articleBody := article_entity.ArticleBody{
+		Text:      string(body),
+		ArticleID: articleID,
+	}
+
+	tx1 := database.ArticleBodies().
+		Where("article_id = ?", articleID).
+		Save(&articleBody)
+
+	return errors.Join(tx.Error, tx1.Error)
 }
 
 func UpdateTitleByID(articleID uint, title string) error {
