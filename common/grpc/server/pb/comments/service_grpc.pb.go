@@ -23,6 +23,7 @@ const (
 	CommentService_CreateComment_FullMethodName          = "/commnets.CommentService/CreateComment"
 	CommentService_DeleteCommnet_FullMethodName          = "/commnets.CommentService/DeleteCommnet"
 	CommentService_GetCommentsByArticleID_FullMethodName = "/commnets.CommentService/GetCommentsByArticleID"
+	CommentService_GetRepliesByCommentID_FullMethodName  = "/commnets.CommentService/GetRepliesByCommentID"
 )
 
 // CommentServiceClient is the client API for CommentService service.
@@ -32,6 +33,7 @@ type CommentServiceClient interface {
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteCommnet(ctx context.Context, in *DeleteCommnetRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetCommentsByArticleID(ctx context.Context, in *GetCommentsByArticleIDRequest, opts ...grpc.CallOption) (*GetCommentsByArticleIDResponse, error)
+	GetRepliesByCommentID(ctx context.Context, in *GetRepliesByCommentIDRequest, opts ...grpc.CallOption) (*GetRepliesByCommentIDResponse, error)
 }
 
 type commentServiceClient struct {
@@ -69,6 +71,15 @@ func (c *commentServiceClient) GetCommentsByArticleID(ctx context.Context, in *G
 	return out, nil
 }
 
+func (c *commentServiceClient) GetRepliesByCommentID(ctx context.Context, in *GetRepliesByCommentIDRequest, opts ...grpc.CallOption) (*GetRepliesByCommentIDResponse, error) {
+	out := new(GetRepliesByCommentIDResponse)
+	err := c.cc.Invoke(ctx, CommentService_GetRepliesByCommentID_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommentServiceServer is the server API for CommentService service.
 // All implementations must embed UnimplementedCommentServiceServer
 // for forward compatibility
@@ -76,6 +87,7 @@ type CommentServiceServer interface {
 	CreateComment(context.Context, *CreateCommentRequest) (*empty.Empty, error)
 	DeleteCommnet(context.Context, *DeleteCommnetRequest) (*empty.Empty, error)
 	GetCommentsByArticleID(context.Context, *GetCommentsByArticleIDRequest) (*GetCommentsByArticleIDResponse, error)
+	GetRepliesByCommentID(context.Context, *GetRepliesByCommentIDRequest) (*GetRepliesByCommentIDResponse, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
 
@@ -91,6 +103,9 @@ func (UnimplementedCommentServiceServer) DeleteCommnet(context.Context, *DeleteC
 }
 func (UnimplementedCommentServiceServer) GetCommentsByArticleID(context.Context, *GetCommentsByArticleIDRequest) (*GetCommentsByArticleIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentsByArticleID not implemented")
+}
+func (UnimplementedCommentServiceServer) GetRepliesByCommentID(context.Context, *GetRepliesByCommentIDRequest) (*GetRepliesByCommentIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRepliesByCommentID not implemented")
 }
 func (UnimplementedCommentServiceServer) mustEmbedUnimplementedCommentServiceServer() {}
 
@@ -159,6 +174,24 @@ func _CommentService_GetCommentsByArticleID_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CommentService_GetRepliesByCommentID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRepliesByCommentIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).GetRepliesByCommentID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommentService_GetRepliesByCommentID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).GetRepliesByCommentID(ctx, req.(*GetRepliesByCommentIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CommentService_ServiceDesc is the grpc.ServiceDesc for CommentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -177,6 +210,10 @@ var CommentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommentsByArticleID",
 			Handler:    _CommentService_GetCommentsByArticleID_Handler,
+		},
+		{
+			MethodName: "GetRepliesByCommentID",
+			Handler:    _CommentService_GetRepliesByCommentID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

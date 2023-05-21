@@ -20,8 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserEventService_PublishUserCreated_FullMethodName = "/users.UserEventService/PublishUserCreated"
-	UserEventService_PublishUserDeleted_FullMethodName = "/users.UserEventService/PublishUserDeleted"
+	UserEventService_PublishUserCreated_FullMethodName   = "/users.UserEventService/PublishUserCreated"
+	UserEventService_PublishUserDeleted_FullMethodName   = "/users.UserEventService/PublishUserDeleted"
+	UserEventService_GetContributionCount_FullMethodName = "/users.UserEventService/GetContributionCount"
 )
 
 // UserEventServiceClient is the client API for UserEventService service.
@@ -30,6 +31,7 @@ const (
 type UserEventServiceClient interface {
 	PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
 	PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetContributionCount(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error)
 }
 
 type userEventServiceClient struct {
@@ -58,12 +60,22 @@ func (c *userEventServiceClient) PublishUserDeleted(ctx context.Context, in *Del
 	return out, nil
 }
 
+func (c *userEventServiceClient) GetContributionCount(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error) {
+	out := new(GetGithubStatsResponse)
+	err := c.cc.Invoke(ctx, UserEventService_GetContributionCount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserEventServiceServer is the server API for UserEventService service.
 // All implementations must embed UnimplementedUserEventServiceServer
 // for forward compatibility
 type UserEventServiceServer interface {
 	PublishUserCreated(context.Context, *CreateUserEvent) (*empty.Empty, error)
 	PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error)
+	GetContributionCount(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error)
 	mustEmbedUnimplementedUserEventServiceServer()
 }
 
@@ -76,6 +88,9 @@ func (UnimplementedUserEventServiceServer) PublishUserCreated(context.Context, *
 }
 func (UnimplementedUserEventServiceServer) PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishUserDeleted not implemented")
+}
+func (UnimplementedUserEventServiceServer) GetContributionCount(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContributionCount not implemented")
 }
 func (UnimplementedUserEventServiceServer) mustEmbedUnimplementedUserEventServiceServer() {}
 
@@ -126,6 +141,24 @@ func _UserEventService_PublishUserDeleted_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserEventService_GetContributionCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGithubStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserEventServiceServer).GetContributionCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserEventService_GetContributionCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserEventServiceServer).GetContributionCount(ctx, req.(*GetGithubStatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserEventService_ServiceDesc is the grpc.ServiceDesc for UserEventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -140,6 +173,10 @@ var UserEventService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PublishUserDeleted",
 			Handler:    _UserEventService_PublishUserDeleted_Handler,
+		},
+		{
+			MethodName: "GetContributionCount",
+			Handler:    _UserEventService_GetContributionCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
