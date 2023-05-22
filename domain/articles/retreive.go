@@ -31,5 +31,6 @@ func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 		IsPrivate: article.IsPrivate,
 		IsLiked:   article.IsLiked,
 		IsAuthor:  isAuthor,
+		Comments:  uint32(article.Comments),
 	}, nil
 }
