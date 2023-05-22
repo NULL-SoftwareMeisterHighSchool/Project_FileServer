@@ -21,6 +21,7 @@ func (CommentServiceServer) CreateComment(ctx context.Context, request *pb.Creat
 		uint(request.GetArticleID()),
 		uint(request.GetAuthorID()),
 		uint(request.GetReplyTo()),
+		uint(request.GetMentionUserID()),
 		request.GetBody(),
 	); err != nil {
 		return nil, errors.StatusForError(err)

@@ -7,12 +7,14 @@ import (
 )
 
 type Comment struct {
-	ID             uint              `gorm:"primary key"`
-	AuthorID       uint              `gorm:"primary key;autoIncrement:false"`
-	Author         *user_entity.User `gorm:"foreignKey:AuthorID;constraint:OnDelete:SET NULL;"`
+	ID             uint `gorm:"primary key"`
 	ArticleID      uint
-	ReplyCommentID *uint
+	AuthorID       uint              `gorm:"primary key;autoIncrement:false"`
+	Author         *user_entity.User `gorm:"foreignKey:AuthorID;constraint:OnDelete:CASCADE;"`
+	MentionUserID  *uint
+	MentionUser    *user_entity.User `gorm:"foreignKey:MentionUserID;constraint:OnDelete:SET NULL;"`
 	Body           string
-	CreatedAt      time.Time  `gorm:"autoCreateTime"`
-	Replies        []*Comment `gorm:"foreignkey:ReplyCommentID"`
+	CreatedAt      time.Time `gorm:"autoCreateTime"`
+	ReplyCommentID *uint
+	Replies        []*Comment `gorm:"foreignkey:ReplyCommentID;constraint:OnDelete:CASCADE"`
 }

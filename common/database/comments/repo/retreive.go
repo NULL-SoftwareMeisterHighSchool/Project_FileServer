@@ -24,3 +24,14 @@ func GetCommentsByArticleID(articleID uint) ([]*comment_entity.Comment, error) {
 		Find(&comments)
 	return comments, tx.Error
 }
+
+func GetIsReplyByCommentID(commentID uint) bool {
+	var isReply bool
+
+	database.Comments().
+		Where("id = ?", commentID).
+		Select("reply_comment_id != 0").
+		Find(&isReply)
+
+	return isReply
+}

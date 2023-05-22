@@ -5,7 +5,7 @@ import (
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 )
 
-func CreateComment(articleID, userID uint, replyTo uint, body string) error {
+func CreateComment(articleID, userID, mentionUserID, replyCommentID uint, body string) error {
 
 	comment := comment_entity.Comment{
 		AuthorID:  userID,
@@ -13,8 +13,12 @@ func CreateComment(articleID, userID uint, replyTo uint, body string) error {
 		Body:      body,
 	}
 
-	if replyTo != 0 {
-		comment.ReplyCommentID = &replyTo
+	if mentionUserID != 0 {
+		comment.MentionUserID = &mentionUserID
+	}
+
+	if replyCommentID != 0 {
+		comment.ReplyCommentID = &replyCommentID
 	}
 
 	tx := database.Comments().Create(&comment)
