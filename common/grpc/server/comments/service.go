@@ -73,3 +73,7 @@ func convertIntoCommentResElems(comments []*comment_entity.Comment) []*pb.Commen
 
 	return resElems
 }
+
+func (CommentServiceServer) GetRepliesByCommentID(context.Context, *pb.GetRepliesByCommentIDRequest) (*pb.GetRepliesByCommentIDResponse, error) {
+	
+}
