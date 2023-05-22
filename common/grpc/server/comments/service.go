@@ -3,6 +3,7 @@ package comments_server
 import (
 	"context"
 
+	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	comment_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/repo"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/comments"
@@ -78,6 +79,37 @@ func convertIntoCommentResElems(comments []*comment_repo.CommentWithReplyCount) 
 	return resElems
 }
 
-func (CommentServiceServer) GetRepliesByCommentID(context.Context, *pb.GetRepliesByCommentIDRequest) (*pb.GetRepliesByCommentIDResponse, error) {
+func (CommentServiceServer) GetRepliesByCommentID(ctx context.Context, request *pb.GetRepliesByCommentIDRequest) (*pb.GetRepliesByCommentIDResponse, error) {
+	comments, err := comments.GetRepliesFromComment(uint(request.GetUserID()), uint(request.GetArticleID()), uint(request.GetCommentID()))
+	if err != nil {
+		return nil, errors.StatusForError(err)
+	}
 
+	resElems := convertIntoReplyResElems(comments)
+
+	return &pb.GetRepliesByCommentIDResponse{
+		Replies: resElems,
+	}, nil
+}
+
+func convertIntoReplyResElems(comments []*comment_entity.Comment) []*pb.ReplyElem {
+	var resElems []*pb.ReplyElem
+
+	for _, comment := range comments {
+
+		var muid *uint32
+		if comment.MentionUserID != nil {
+			*muid = uint32(*comment.MentionUserID)
+		}
+
+		resElems = append(resElems, &pb.ReplyElem{
+			CommentID:     uint32(comment.ID),
+			AuthorID:      uint32(comment.AuthorID),
+			CreatedAt:     timestamppb.New(comment.CreatedAt),
+			Body:          comment.Body,
+			MentionUserID: muid,
+		})
+	}
+
+	return resElems
 }

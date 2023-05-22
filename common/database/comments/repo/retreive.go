@@ -31,7 +31,17 @@ func GetCommentsByArticleID(articleID uint) ([]*CommentWithReplyCount, error) {
 				Where("reply_comment_id = comment.id").
 				Select("COUNT(*)"),
 		).
-		Omit("reply_comment_id", "article_id", ).
+		Omit("reply_comment_id", "article_id").
+		Find(&comments)
+	return comments, tx.Error
+}
+
+func GetRepliesByCommentID(commentID uint) ([]*comment_entity.Comment, error) {
+	var comments []*comment_entity.Comment
+
+	tx := database.Comments().
+		Where("reply_comment_id = ?", commentID).
+		Omit("reply_comment_id", "article_id").
 		Find(&comments)
 	return comments, tx.Error
 }
