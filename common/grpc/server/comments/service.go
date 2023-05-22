@@ -3,7 +3,7 @@ package comments_server
 import (
 	"context"
 
-	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
+	comment_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/repo"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/comments"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/comments"
@@ -55,19 +55,17 @@ func (CommentServiceServer) GetCommentsByArticleID(ctx context.Context, request 
 	}, nil
 }
 
-func convertIntoCommentResElems(comments []*comment_entity.Comment) []*pb.CommentElem {
+func convertIntoCommentResElems(comments []*comment_repo.CommentWithReplyCount) []*pb.CommentElem {
 	var resElems []*pb.CommentElem
 
 	for _, comment := range comments {
 
-		repl := uint32(*comment.ReplyCommentID)
-
 		resElems = append(resElems, &pb.CommentElem{
-			ArticleID: uint32(comment.ArticleID),
-			AuthorID:  uint32(comment.AuthorID),
-			CreatedAt: timestamppb.New(comment.CreatedAt),
-			Body:      comment.Body,
-			ReplyTo:   &repl,
+			CommentID:  uint32(comment.ID),
+			ReplyCount: uint32(comment.ReplyCount),
+			AuthorID:   uint32(comment.AuthorID),
+			CreatedAt:  timestamppb.New(comment.CreatedAt),
+			Body:       comment.Body,
 		})
 	}
 
@@ -75,5 +73,5 @@ func convertIntoCommentResElems(comments []*comment_entity.Comment) []*pb.Commen
 }
 
 func (CommentServiceServer) GetRepliesByCommentID(context.Context, *pb.GetRepliesByCommentIDRequest) (*pb.GetRepliesByCommentIDResponse, error) {
-	
+
 }

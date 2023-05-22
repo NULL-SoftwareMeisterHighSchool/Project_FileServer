@@ -20,9 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserEventService_PublishUserCreated_FullMethodName   = "/users.UserEventService/PublishUserCreated"
-	UserEventService_PublishUserDeleted_FullMethodName   = "/users.UserEventService/PublishUserDeleted"
-	UserEventService_GetContributionCount_FullMethodName = "/users.UserEventService/GetContributionCount"
+	UserEventService_PublishUserCreated_FullMethodName = "/users.UserEventService/PublishUserCreated"
+	UserEventService_PublishUserDeleted_FullMethodName = "/users.UserEventService/PublishUserDeleted"
+	UserEventService_GetGithubStats_FullMethodName     = "/users.UserEventService/GetGithubStats"
 )
 
 // UserEventServiceClient is the client API for UserEventService service.
@@ -31,7 +31,7 @@ const (
 type UserEventServiceClient interface {
 	PublishUserCreated(ctx context.Context, in *CreateUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
 	PublishUserDeleted(ctx context.Context, in *DeleteUserEvent, opts ...grpc.CallOption) (*empty.Empty, error)
-	GetContributionCount(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error)
+	GetGithubStats(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error)
 }
 
 type userEventServiceClient struct {
@@ -60,9 +60,9 @@ func (c *userEventServiceClient) PublishUserDeleted(ctx context.Context, in *Del
 	return out, nil
 }
 
-func (c *userEventServiceClient) GetContributionCount(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error) {
+func (c *userEventServiceClient) GetGithubStats(ctx context.Context, in *GetGithubStatsRequest, opts ...grpc.CallOption) (*GetGithubStatsResponse, error) {
 	out := new(GetGithubStatsResponse)
-	err := c.cc.Invoke(ctx, UserEventService_GetContributionCount_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, UserEventService_GetGithubStats_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *userEventServiceClient) GetContributionCount(ctx context.Context, in *G
 type UserEventServiceServer interface {
 	PublishUserCreated(context.Context, *CreateUserEvent) (*empty.Empty, error)
 	PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error)
-	GetContributionCount(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error)
+	GetGithubStats(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error)
 	mustEmbedUnimplementedUserEventServiceServer()
 }
 
@@ -89,8 +89,8 @@ func (UnimplementedUserEventServiceServer) PublishUserCreated(context.Context, *
 func (UnimplementedUserEventServiceServer) PublishUserDeleted(context.Context, *DeleteUserEvent) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishUserDeleted not implemented")
 }
-func (UnimplementedUserEventServiceServer) GetContributionCount(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetContributionCount not implemented")
+func (UnimplementedUserEventServiceServer) GetGithubStats(context.Context, *GetGithubStatsRequest) (*GetGithubStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGithubStats not implemented")
 }
 func (UnimplementedUserEventServiceServer) mustEmbedUnimplementedUserEventServiceServer() {}
 
@@ -141,20 +141,20 @@ func _UserEventService_PublishUserDeleted_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserEventService_GetContributionCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserEventService_GetGithubStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGithubStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserEventServiceServer).GetContributionCount(ctx, in)
+		return srv.(UserEventServiceServer).GetGithubStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserEventService_GetContributionCount_FullMethodName,
+		FullMethod: UserEventService_GetGithubStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserEventServiceServer).GetContributionCount(ctx, req.(*GetGithubStatsRequest))
+		return srv.(UserEventServiceServer).GetGithubStats(ctx, req.(*GetGithubStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -175,8 +175,8 @@ var UserEventService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserEventService_PublishUserDeleted_Handler,
 		},
 		{
-			MethodName: "GetContributionCount",
-			Handler:    _UserEventService_GetContributionCount_Handler,
+			MethodName: "GetGithubStats",
+			Handler:    _UserEventService_GetGithubStats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
