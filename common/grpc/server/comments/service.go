@@ -60,12 +60,18 @@ func convertIntoCommentResElems(comments []*comment_repo.CommentWithReplyCount) 
 
 	for _, comment := range comments {
 
+		var muid *uint32
+		if comment.MentionUserID != nil {
+			*muid = uint32(*comment.MentionUserID)
+		}
+
 		resElems = append(resElems, &pb.CommentElem{
-			CommentID:  uint32(comment.ID),
-			ReplyCount: uint32(comment.ReplyCount),
-			AuthorID:   uint32(comment.AuthorID),
-			CreatedAt:  timestamppb.New(comment.CreatedAt),
-			Body:       comment.Body,
+			CommentID:     uint32(comment.ID),
+			ReplyCount:    uint32(comment.ReplyCount),
+			AuthorID:      uint32(comment.AuthorID),
+			CreatedAt:     timestamppb.New(comment.CreatedAt),
+			Body:          comment.Body,
+			MentionUserID: muid,
 		})
 	}
 

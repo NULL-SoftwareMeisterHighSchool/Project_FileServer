@@ -5,6 +5,11 @@ import (
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 )
 
+type CommentWithReplyCount struct {
+	comment_entity.Comment
+	ReplyCount uint
+}
+
 func GetOwnerByIDAndArticleID(commentID, articleID uint) (uint, error) {
 	var authorID uint
 	err := database.Comments().
@@ -16,11 +21,17 @@ func GetOwnerByIDAndArticleID(commentID, articleID uint) (uint, error) {
 	return authorID, err
 }
 
-func GetCommentsByArticleID(articleID uint) ([]*comment_entity.Comment, error) {
-	var comments []*comment_entity.Comment
+func GetCommentsByArticleID(articleID uint) ([]*CommentWithReplyCount, error) {
+	var comments []*CommentWithReplyCount
 
 	tx := database.Comments().
 		Where("article_id = ?", articleID).
+		Select("comments.*, (?) AS reply_count",
+			database.Comments().
+				Where("reply_comment_id = comment.id").
+				Select("COUNT(*)"),
+		).
+		Omit("reply_comment_id", "article_id", ).
 		Find(&comments)
 	return comments, tx.Error
 }
