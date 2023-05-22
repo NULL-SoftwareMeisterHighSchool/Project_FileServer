@@ -11,6 +11,8 @@ type ListArticleElemWithLikes struct {
 	article_entity.Article
 	Thumbnail string
 	Likes     uint
+	Comments  uint
+	IsAuthor  bool
 }
 
 func ListArticles(
@@ -19,20 +21,21 @@ func ListArticles(
 	order ArticleOrder,
 	articleType ArticleTypeOption,
 	authorID uint,
+	userID uint,
 	isPrivate *bool,
 	start time.Time,
 	end time.Time,
 	query string,
-) []*ListArticleElemWithLikes {
+) ([]*ListArticleElemWithLikes, uint) {
 
 	var articles []*ListArticleElemWithLikes
+	var recordCnt int64
+
 	tx := database.Articles()
 
 	tx = tx.Where("created_at BETWEEN ? AND ?", start, end)
 
-	if articleType != ALL {
-		tx = tx.Where("type = ?", articleType-1)
-	}
+	tx = tx.Where("type = ?", articleType)
 
 	if authorID != 0 {
 		tx = tx.Where("author_id = ?", authorID)
@@ -52,18 +55,26 @@ func ListArticles(
 			)
 	}
 
-	tx = tx.Select("articles.*, (?) AS likes, (?) AS thumbnail",
-		LikesForArticleQuery().
-			Select("COUNT(*)"),
+	// get count
+	tx.Count(&recordCnt)
+
+	// select
+	tx = tx.Select("articles.*, (?) AS thumbnail, (?) AS likes,  (?) AS comments, articles.author_id == ? AS is_author",
+		// thumbnail
 		database.Images().
 			Where("article_id = articles.id").
 			Select("url").
 			Limit(1),
+		// likes
+		LikesForArticleQuery().
+			Select("COUNT(*)"),
+		// comments
+		database.Comments().
+			Where("article_id = articles.id").
+			Select("COUNT(*)"),
+		// userID
+		userID,
 	)
-
-	// tx = tx.Joins("JOIN (?) AS likes_tbl ON articles.id = likes_tbl.article_id",
-	// 	database.ArticleLikes.Group("article_id").
-	// )
 
 	switch order {
 	case TIME:
@@ -74,5 +85,5 @@ func ListArticles(
 
 	tx.Offset(int(offset)).Limit(int(amount)).Find(&articles)
 
-	return articles
+	return articles, uint(recordCnt)
 }

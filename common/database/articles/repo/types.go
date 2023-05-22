@@ -11,7 +11,6 @@ const (
 type ArticleTypeOption uint8
 
 const (
-	ALL ArticleTypeOption = iota
-	GENERAL
+	GENERAL ArticleTypeOption = iota
 	TECH
 )

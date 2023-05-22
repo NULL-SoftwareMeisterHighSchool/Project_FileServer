@@ -15,6 +15,7 @@ func ListArticles(
 	order repo.ArticleOrder,
 	articleType repo.ArticleTypeOption,
 	authorID uint,
+	userID uint,
 	duration *pb.Duration,
 	query string,
 ) (*pb.ListArticleResponse, error) {
@@ -22,13 +23,14 @@ func ListArticles(
 	falsyP := false
 	start, end := convertDurationOrDefault(duration)
 
-	articles := repo.ListArticles(
+	articles, totalCnt := repo.ListArticles(
 		offset, amount, order, articleType,
-		authorID, &falsyP, start, end, query,
+		authorID, userID, &falsyP, start, end, query,
 	)
 
 	return &pb.ListArticleResponse{
-		Articles: convertToResponseElems(articles),
+		Articles:   convertToResponseElems(articles),
+		TotalCount: uint32(totalCnt),
 	}, nil
 }
 
@@ -54,13 +56,14 @@ func ListArticlesByAuthor(
 		}
 	}
 
-	articles := repo.ListArticles(
+	articles, totalCnt := repo.ListArticles(
 		offset, amount, order, articleType,
-		authorID, isPrivate, start, end, query,
+		authorID, userID, isPrivate, start, end, query,
 	)
 
 	return &pb.ListArticleResponse{
-		Articles: convertToResponseElems(articles),
+		Articles:   convertToResponseElems(articles),
+		TotalCount: uint32(totalCnt),
 	}, nil
 }
 
@@ -85,13 +88,14 @@ func convertToResponseElems(articles []*repo.ListArticleElemWithLikes) []*pb.Lis
 			AuthorID:  uint32(article.AuthorID),
 			Title:     article.Title,
 			Summary:   article.Summary,
-			Type:      pb.ArticleType(article.Type + 1),
+			Type:      pb.ArticleType(article.Type),
 			IsPrivate: article.IsPrivate,
 			CreatedAt: timestamppb.New(article.CreatedAt),
-			UpdatedAt: timestamppb.New(article.UpdatedAt),
 			Views:     article.Views,
 			Likes:     uint32(article.Likes),
 			Thumbnail: article.Thumbnail,
+			IsAuthor:  article.IsAuthor,
+			Comments:  uint32(article.Comments),
 		})
 	}
 
