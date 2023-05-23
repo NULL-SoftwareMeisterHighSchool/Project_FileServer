@@ -2,13 +2,28 @@ package github_client
 
 import "time"
 
-type queryCountUserContribution struct {
+type queryGithubStat struct {
 	User struct {
 		ContributionsCollection struct {
-			ContributionCalendar struct {
-				TotalContributions uint32
-			} `graphql:"contributionCalendar(from: $from, to: $to)"`
+			RestrictedContributionsCount uint32
+			TotalCommitContributions     uint32
+		} `graphql:"contributionsCollection(from: $from, to: $to)"`
+		RepositoriesContributedTo struct {
+			TotalCount uint32
 		}
+		PullRequests struct {
+			TotalCount uint32
+		}
+		Issues struct {
+			TotalCount uint32
+		}
+		Repositories struct {
+			Nodes struct {
+				Stargazers struct {
+					TotalCount uint32
+				}
+			}
+		} `graphql:"repositories(first: 10000, ownerAffiliations: OWNER"`
 	} `graphql:"user(login: $login)"`
 }
 

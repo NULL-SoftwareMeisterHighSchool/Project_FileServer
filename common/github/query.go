@@ -8,7 +8,16 @@ import (
 
 const isoLayout = "2006-01-02T15:04:05-0700"
 
-func GetUserContributionCount(login string, from, to *time.Time) uint32 {
+type GithubInfo struct {
+	UserID               uint
+	ContributionCount    uint
+	StarCount            uint
+	IssueCount           uint
+	PullRequestCount     uint
+	ContributedRepoCount uint
+}
+
+func GetUserContributionCount(login string, from, to *time.Time) GithubInfo {
 	client := getClient()
 
 	variables := map[string]interface{}{
@@ -17,16 +26,26 @@ func GetUserContributionCount(login string, from, to *time.Time) uint32 {
 		"to":    to.UTC().Format(isoLayout),
 	}
 
-	var query queryCountUserContribution
+	var query queryGithubStat
 	if err := client.Query(context.Background(), &query, variables); err != nil {
 		panic(err)
 	}
 
-	return query.
-		User.
-		ContributionsCollection.
-		ContributionCalendar.
-		TotalContributions
+	var (
+		contCol     = query.User.ContributionsCollection
+		starCnt     = query.User.Repositories.Nodes.Stargazers.TotalCount
+		issueCnt    = query.User.Issues.TotalCount
+		prCnt       = query.User.PullRequests.TotalCount
+		contRepoCnt = query.User.PullRequests.TotalCount
+	)
+
+	return GithubInfo{
+		ContributionCount:    uint(contCol.RestrictedContributionsCount + contCol.RestrictedContributionsCount),
+		StarCount:            uint(starCnt),
+		IssueCount:           uint(issueCnt),
+		PullRequestCount:     uint(prCnt),
+		ContributedRepoCount: uint(contRepoCnt),
+	}
 }
 
 func GetUserJoinedAt(login string) time.Time {
