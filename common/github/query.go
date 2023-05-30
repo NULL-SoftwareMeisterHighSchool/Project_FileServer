@@ -33,7 +33,7 @@ func GetUserContributionCount(login string, from, to *time.Time) GithubInfo {
 
 	var (
 		contCol     = query.User.ContributionsCollection
-		starCnt     = query.User.Repositories.Nodes.Stargazers.TotalCount
+		starCnt     = getStarCountFrom(query.User.Repositories.Nodes)
 		issueCnt    = query.User.Issues.TotalCount
 		prCnt       = query.User.PullRequests.TotalCount
 		contRepoCnt = query.User.PullRequests.TotalCount
@@ -61,4 +61,12 @@ func GetUserJoinedAt(login string) time.Time {
 	}
 
 	return query.User.CreatedAt
+}
+
+func getStarCountFrom(nodes []Node) uint {
+	var cnt uint = 0
+	for _, node := range nodes {
+		cnt += uint(node.Stargazers.TotalCount)
+	}
+	return cnt
 }

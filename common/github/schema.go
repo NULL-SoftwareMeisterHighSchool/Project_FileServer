@@ -2,6 +2,12 @@ package github_client
 
 import "time"
 
+type Node struct {
+	Stargazers struct {
+		TotalCount uint32
+	}
+}
+
 type queryGithubStat struct {
 	User struct {
 		ContributionsCollection struct {
@@ -18,11 +24,7 @@ type queryGithubStat struct {
 			TotalCount uint32
 		}
 		Repositories struct {
-			Nodes struct {
-				Stargazers struct {
-					TotalCount uint32
-				}
-			}
+			Nodes []Node
 		} `graphql:"repositories(first: 10000, ownerAffiliations: OWNER"`
 	} `graphql:"user(login: $login)"`
 }
