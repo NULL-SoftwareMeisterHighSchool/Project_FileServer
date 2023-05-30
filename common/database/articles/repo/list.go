@@ -79,8 +79,10 @@ func ListArticles(
 	switch order {
 	case TIME:
 		tx = tx.Order("created_at DESC")
-	case POPULARITY:
-		tx = tx.Order("views + (likes * 3) DESC")
+	case VIEWS:
+		tx = tx.Order("views DESC")
+	case LIKES:
+		tx = tx.Order("likes DESC")
 	}
 
 	tx.Offset(int(offset)).Limit(int(amount)).Find(&articles)

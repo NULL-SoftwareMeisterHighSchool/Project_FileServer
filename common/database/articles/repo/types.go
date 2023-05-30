@@ -4,8 +4,8 @@ type ArticleOrder uint8
 
 const (
 	TIME ArticleOrder = iota
-	POPULARITY
-	RELEVANCE
+	VIEWS
+	LIKES
 )
 
 type ArticleTypeOption uint8
