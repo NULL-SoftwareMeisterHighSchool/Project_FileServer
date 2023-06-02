@@ -23,3 +23,8 @@ var (
 var (
 	GH_TOKEN string
 )
+
+var (
+	AWS_ACCESS string
+	AWS_SECRET string
+)

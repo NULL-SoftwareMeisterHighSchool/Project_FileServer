@@ -29,6 +29,10 @@ func LoadEnv() {
 
 	// github api
 	GH_TOKEN = os.Getenv("GH_TOKEN")
+
+	// aws
+	AWS_ACCESS = os.Getenv("AWS_ACCESS")
+	AWS_SECRET = os.Getenv("AWS_SECRET")
 }
 
 func loadDotEnv() {
