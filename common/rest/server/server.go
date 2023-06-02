@@ -36,7 +36,7 @@ func Listen() {
 				image_controller.UploadImage,
 			)
 			// filesystem setting. can be deleted if it uses s3 or something.
-			imagesRouter.Static("", "./contents/images")
+			// imagesRouter.Static("", "./contents/images")
 		}
 
 	}

@@ -2,8 +2,9 @@ package storages
 
 import (
 	"mime/multipart"
+	"sync"
 
-	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages/filesystem"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages/s3"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,8 +13,12 @@ type Storage interface {
 	UploadImage(name, extension string, fileHeader *multipart.FileHeader) (string, *fiber.Error)
 }
 
-var storage Storage = filesystem.Get()
+var storage Storage
+var once sync.Once
 
 func Get() Storage {
+	once.Do(func() {
+		storage = s3.Get()
+	})
 	return storage
 }
