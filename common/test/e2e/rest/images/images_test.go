@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
 
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
@@ -47,7 +46,7 @@ func TestUploadImage(t *testing.T) {
 	)
 
 	// Create MultipartForm
-	file, _ := os.Open("../resources/unknown.png")
+	file, _ := os.Open("../../resources/unknown.png")
 	defer file.Close()
 	buf := &bytes.Buffer{}
 
@@ -85,19 +84,19 @@ func TestUploadImage(t *testing.T) {
 	}
 
 	// s3
-	// res, err = http.DefaultClient.Get(url.URL)
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
-
-	// if res.StatusCode != http.StatusOK {
-	// 	t.Errorf("no image found on path: %s. status: %d", url.URL, res.StatusCode)
-	// 	return
-	// }
-
-	// filesystem
-	if _, err := os.Stat("." + strings.Split(url.URL, ":8080")[1]); err != nil {
+	res, err = http.DefaultClient.Get(url.URL)
+	if err != nil {
 		t.Error(err)
+		return
 	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("no image found on path: %s. status: %d", url.URL, res.StatusCode)
+		return
+	}
+
+	// // filesystem
+	// if _, err := os.Stat("." + strings.Split(url.URL, ":8080")[1]); err != nil {
+	// 	t.Error(err)
+	// }
 }

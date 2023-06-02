@@ -1,7 +1,6 @@
 package e2e_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
@@ -24,5 +23,5 @@ func tearDown(t *testing.T) {
 	}
 
 	// if storage uses filesystem
-	os.RemoveAll("./contents")
+	// os.RemoveAll("./contents")
 }
