@@ -52,7 +52,7 @@ func TestListArticles(t *testing.T) {
 	if list, _ := client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
 		Offset: 0,
 		Amount: 10,
-		Order:  articles_pb.ListArticleOrder_POPULARITY,
+		Order:  articles_pb.ListArticleOrder_LIKES,
 	}); len(list.GetArticles()) != articleCount {
 		t.Errorf("expected: %d articles. got: %+#v", articleCount, list.GetArticles())
 	}
@@ -61,7 +61,7 @@ func TestListArticles(t *testing.T) {
 	list, _ := client.ListArticle(context.Background(), &articles_pb.ListArticleRequest{
 		Offset: 0,
 		Amount: 10,
-		Order:  articles_pb.ListArticleOrder_POPULARITY,
+		Order:  articles_pb.ListArticleOrder_LIKES,
 		Type:   articles_pb.ArticleType_GENERAL,
 	})
 	if len(list.GetArticles()) != 2 {
