@@ -33,7 +33,7 @@ func (UserServiceServer) PublishUserDeleted(ctx context.Context, event *pb.Delet
 
 func (UserServiceServer) GetGithubStats(ctx context.Context, request *pb.GetGithubStatsRequest) (*pb.GetGithubStatsResponse, error) {
 
-	stats, err := users.GetUsersContribution(request.GetUsers())
+	stats, err := users.GetUsersGithubStats(request.GetUsers())
 	if err != nil {
 		return nil, errors.StatusForError(err)
 	}

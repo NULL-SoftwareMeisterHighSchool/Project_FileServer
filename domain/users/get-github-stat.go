@@ -26,7 +26,7 @@ func getGithubStatStream(userInfoList []*pb.UserInfo) chan client.GithubInfo {
 	return statStream
 }
 
-func GetUsersContribution(userInfoList []*pb.UserInfo) (*pb.GetGithubStatsResponse, error) {
+func GetUsersGithubStats(userInfoList []*pb.UserInfo) (*pb.GetGithubStatsResponse, error) {
 
 	var statElems []*pb.GithubStats
 	statStream := getGithubStatStream(userInfoList)
