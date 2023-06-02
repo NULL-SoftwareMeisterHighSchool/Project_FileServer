@@ -1,27 +1,38 @@
 package users
 
 import (
+	"sync"
 	"time"
 
 	client "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/github"
 	pb "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/grpc/server/pb/users"
 )
 
-func requestGithubStat(userInfo *pb.UserInfo, c chan<- client.GithubInfo) {
-	joinedAt := client.GetUserJoinedAt(userInfo.GetUserLogin())
+func requestGithubStat(userInfo *pb.UserInfo, c chan<- client.GithubInfo, wg *sync.WaitGroup) {
+
+	// joinedAt := client.GetUserJoinedAt(userInfo.GetUserLogin())
+	joinedAt := time.Now().AddDate(-1, 0, 0)
 	now := time.Now()
 
 	stat := client.GetUserContributionCount(userInfo.GetUserLogin(), &joinedAt, &now)
 	stat.UserID = uint(userInfo.GetUserID())
 	c <- stat
+	wg.Done()
 }
 
 func getGithubStatStream(userInfoList []*pb.UserInfo) chan client.GithubInfo {
 	statStream := make(chan client.GithubInfo)
 
-	for _, userInfo := range userInfoList {
-		go requestGithubStat(userInfo, statStream)
-	}
+	wg := new(sync.WaitGroup)
+	wg.Add(len(userInfoList))
+
+	go func() {
+		for _, userInfo := range userInfoList {
+			go requestGithubStat(userInfo, statStream, wg)
+		}
+		wg.Wait()
+		close(statStream)
+	}()
 
 	return statStream
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const isoLayout = "2006-01-02T15:04:05-0700"
+type DateTime string
 
 type GithubInfo struct {
 	UserID               uint
@@ -22,8 +22,8 @@ func GetUserContributionCount(login string, from, to *time.Time) GithubInfo {
 
 	variables := map[string]interface{}{
 		"login": login,
-		"from":  from.UTC().Format(isoLayout),
-		"to":    to.UTC().Format(isoLayout),
+		"from":  DateTime(from.UTC().Format(time.RFC3339)),
+		"to":    DateTime(to.UTC().Format(time.RFC3339)),
 	}
 
 	var query queryGithubStat
@@ -32,7 +32,7 @@ func GetUserContributionCount(login string, from, to *time.Time) GithubInfo {
 	}
 
 	var (
-		contCol     = query.User.ContributionsCollection
+		commitCnt   = query.User.ContributionsCollection.TotalCommitContributions
 		starCnt     = getStarCountFrom(query.User.Repositories.Nodes)
 		issueCnt    = query.User.Issues.TotalCount
 		prCnt       = query.User.PullRequests.TotalCount
@@ -40,7 +40,7 @@ func GetUserContributionCount(login string, from, to *time.Time) GithubInfo {
 	)
 
 	return GithubInfo{
-		ContributionCount:    uint(contCol.RestrictedContributionsCount + contCol.RestrictedContributionsCount),
+		ContributionCount:    uint(commitCnt),
 		StarCount:            uint(starCnt),
 		IssueCount:           uint(issueCnt),
 		PullRequestCount:     uint(prCnt),

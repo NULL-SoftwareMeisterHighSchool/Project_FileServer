@@ -22,7 +22,7 @@ func getClient() *graphql.Client {
 		clientOnce.Do(func() {
 			src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.GH_TOKEN})
 			httpClient := oauth2.NewClient(context.Background(), src)
-			client = graphql.NewClient(API_URL, httpClient)
+			client = graphql.NewClient(API_URL, httpClient).WithDebug(true)
 		})
 	}
 	return client
