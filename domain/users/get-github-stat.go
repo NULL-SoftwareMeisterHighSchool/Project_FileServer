@@ -10,11 +10,10 @@ import (
 
 func requestGithubStat(userInfo *pb.UserInfo, c chan<- client.GithubInfo, wg *sync.WaitGroup) {
 
-	// joinedAt := client.GetUserJoinedAt(userInfo.GetUserLogin())
-	joinedAt := time.Now().AddDate(-1, 0, 0)
+	joinedAt := client.GetUserJoinedAt(userInfo.GetUserLogin())
 	now := time.Now()
 
-	stat := client.GetUserContributionCount(userInfo.GetUserLogin(), &joinedAt, &now)
+	stat := client.GetUserContributionCount(userInfo.GetUserLogin(), joinedAt, now)
 	stat.UserID = uint(userInfo.GetUserID())
 	c <- stat
 	wg.Done()
