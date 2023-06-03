@@ -32,7 +32,7 @@ type queryGithubStat struct {
 		Issues struct {
 			TotalCount uint32
 		}
-		Repositories repositories `graphql:"repositories(first: 100, after: $after,orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
+		Repositories repositories `graphql:"repositories(first: 100, orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
 	} `graphql:"user(login: $login)"`
 }
 
@@ -45,13 +45,13 @@ type queryGetUserJoinedAt struct {
 type queryUserRepositoriesAndCommits struct {
 	User struct {
 		ContributionsCollection contributionsCollection `graphql:"contributionsCollection(from: $from, to: $to)"`
-		Repositories            repositories            `graphql:"repositories(first: 100, after: $after,orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
+		Repositories            repositories            `graphql:"repositories(first: 100, after: $after, orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
 	} `graphql:"user(login: $login)"`
 }
 
 type queryUserRepositories struct {
 	User struct {
-		Repositories repositories `graphql:"repositories(first: 100, after: $after,orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
+		Repositories repositories `graphql:"repositories(first: 100, after: $after, orderBy: {direction:DESC, field: STARGAZERS}, ownerAffiliations: OWNER)"`
 	} `graphql:"user(login: $login)"`
 }
 

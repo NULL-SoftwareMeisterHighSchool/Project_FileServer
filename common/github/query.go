@@ -38,7 +38,6 @@ func GetUserContributionCount(login string, from, end time.Time) GithubInfo {
 		"login": login,
 		"from":  datetimeFrom(from),
 		"to":    datetimeFrom(next),
-		"after": nil,
 	}
 
 	githubInfo, pageInfo = queryAllGithubStats(client, variables)
@@ -68,6 +67,7 @@ loop:
 			starCnt, pageInfo = queryNextStarCnt(client, variables)
 		case nextIsBeforeTo:
 			// query commit
+			delete(variables, "after")
 			commitCnt = queryNextCommitCnt(client, variables)
 		default:
 			break loop
