@@ -2,10 +2,11 @@ package config
 
 var (
 	REST_PORT string
+	GRPC_PORT string
 )
 
 var (
-	GRPC_PORT string
+	CORE_IP string
 )
 
 var (

@@ -17,6 +17,9 @@ func LoadEnv() {
 	// grpc server
 	GRPC_PORT = os.Getenv("GRPC_PORT")
 
+	// core server
+	CORE_IP = os.Getenv("CORE_IP")
+
 	// database
 	DB_NAME = os.Getenv("DB_NAME")
 	DB_HOST = os.Getenv("DB_HOST")
