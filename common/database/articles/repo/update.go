@@ -5,6 +5,7 @@ import (
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 	"gorm.io/gorm"
 )
 
@@ -27,7 +28,7 @@ func UpdateArticleBody(articleID uint, body []byte) error {
 		Updates(article)
 
 	articleBody := article_entity.ArticleBody{
-		Text:      string(body),
+		Text:      string(util.SanitizeXSS(body)),
 		ArticleID: articleID,
 	}
 
