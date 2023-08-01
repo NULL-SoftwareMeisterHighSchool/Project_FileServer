@@ -11,19 +11,15 @@ import (
 
 func UploadImage(c *fiber.Ctx) error {
 	var err *fiber.Error
-	var articleID uint
 
 	userID := c.Locals("userID").(uint)
-	if articleID, err = parseQuery(c); err != nil {
-		return err
-	}
 
 	var image *multipart.FileHeader
 	if image, err = getImageFromFormFile(c); err != nil {
 		return err
 	}
 
-	url, err := images.UploadImage(userID, articleID, image)
+	url, err := images.UploadImage(userID, image)
 	if err != nil {
 		return err
 	}

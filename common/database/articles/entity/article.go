@@ -4,7 +4,6 @@ import (
 	"time"
 
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
-	image_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/images/entity"
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
 )
@@ -31,7 +30,6 @@ type Article struct {
 	IsPrivate bool              `gorm:"type:tinyint"`
 	Views     uint64
 	Likes     []*user_entity.User       `gorm:"many2many:user_likes;"`
-	Images    []*image_entity.Image     `gorm:"constraint:OnDelete:CASCADE;"`
 	Comments  []*comment_entity.Comment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 

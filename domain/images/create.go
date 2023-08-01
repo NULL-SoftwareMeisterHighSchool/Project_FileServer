@@ -7,11 +7,10 @@ import (
 	image_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/images/repo"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/errors"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/storages"
-	article_utils "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
-func UploadImage(userID, articleID uint, image *multipart.FileHeader) (string, *fiber.Error) {
+func UploadImage(userID uint, image *multipart.FileHeader) (string, *fiber.Error) {
 
 	var err *fiber.Error
 
@@ -22,16 +21,12 @@ func UploadImage(userID, articleID uint, image *multipart.FileHeader) (string, *
 
 	storage := storages.Get()
 
-	if err := article_utils.CheckSudoAndExists(userID, articleID); err != nil {
-		return "", errors.ErrNoPermission(err)
-	}
-
 	var url string
 	if url, err = storage.UploadImage(name, extension, image); err != nil {
 		return "", errors.CreateUnkownErr(err)
 	}
 
-	if err := image_repo.CreateImage(articleID, url); err != nil {
+	if err := image_repo.CreateImage(url); err != nil {
 		return "", errors.CreateUnkownErr(err)
 	}
 
