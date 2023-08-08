@@ -23,7 +23,7 @@ type Article struct {
 	Author    *user_entity.User `gorm:"foreignKey:AuthorID;constraint:OnDelete:CASCADE;"`
 	CreatedAt time.Time         `gorm:"autoCreateTime"`
 	UpdatedAt time.Time         `gorm:"autoUpdateTime"`
-	Title     string            `gorm:"type:varchar(2048);index:,class:FULLTEXT,option:WITH PARSER ngram"`
+	Title     string            `gorm:"type:varchar(2048);index:,class:FULLTEXT"`
 	Summary   string            `gorm:"type:varchar(400)"`
 	Body      ArticleBody       `gorm:"constraint:OnDelete:CASCADE"`
 	Type      ArticleType       `gorm:"type:tinyint"`
@@ -35,7 +35,7 @@ type Article struct {
 
 type ArticleBody struct {
 	ArticleID uint
-	Text      string `gorm:"type:longtext;index:,class:FULLTEXT,option:WITH PARSER ngram"`
+	Text      string `gorm:"type:longtext;index:,class:FULLTEXT"`
 }
 
 func New() *Article {
