@@ -2,7 +2,11 @@ package article_repo
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strings"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/util"
@@ -22,13 +26,16 @@ func UpdateArticleBody(articleID uint, body []byte) error {
 		SetID(articleID).
 		SetSummary(body)
 
+	body = util.SanitizeXSS(body)
+	article.Thumbnail = getThumbnailFromBody(body)
+
 	tx := database.Articles().
 		Where("id = ?", articleID).
 		Omit("id").
 		Updates(article)
 
 	articleBody := article_entity.ArticleBody{
-		Text:      string(util.SanitizeXSS(body)),
+		Text:      string(body),
 		ArticleID: articleID,
 	}
 
@@ -70,4 +77,10 @@ func ToggleLike(articleID, userID uint) error {
 	} else {
 		return database.ArticleLikes().Create(it).Error
 	}
+}
+
+func getThumbnailFromBody(body []byte) string {
+	urlPattern := fmt.Sprintf(`^(https?)://[^\s/$.?#]+\.(%s)$`, strings.Join(config.IMAGE_EXTENSIONS, "|"))
+	regex := regexp.MustCompile(urlPattern)
+	return string(regex.Find(body))
 }

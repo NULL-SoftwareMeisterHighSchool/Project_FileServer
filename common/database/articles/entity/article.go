@@ -24,6 +24,7 @@ type Article struct {
 	CreatedAt time.Time         `gorm:"autoCreateTime"`
 	UpdatedAt time.Time         `gorm:"autoUpdateTime"`
 	Title     string            `gorm:"type:varchar(2048);index:,class:FULLTEXT"`
+	Thumbnail string            `gorm:"type:varchar(3000)"`
 	Summary   string            `gorm:"type:varchar(400)"`
 	Body      ArticleBody       `gorm:"constraint:OnDelete:CASCADE"`
 	Type      ArticleType       `gorm:"type:tinyint"`
