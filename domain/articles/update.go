@@ -29,7 +29,7 @@ func UpdateArticleVisibility(userID, articleID uint, isPrivate bool) error {
 	return article_repo.UpdateIsPrivateByID(articleID, isPrivate)
 }
 
-func ToggleArticleLike(userID, articleID uint) error {
+func ToggleArticleLike(articleID, userID uint) error {
 	if err := article_utils.CheckExists(articleID); err != nil {
 		return err
 	}

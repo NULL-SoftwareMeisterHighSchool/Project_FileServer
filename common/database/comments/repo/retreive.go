@@ -28,7 +28,7 @@ func GetCommentsByArticleID(articleID uint) ([]*CommentWithReplyCount, error) {
 		Where("article_id = ?", articleID).
 		Select("comments.*, (?) AS reply_count",
 			database.Comments().
-				Where("reply_comment_id = comment.id").
+				Where("reply_comment_id = comments.id").
 				Select("COUNT(*)"),
 		).
 		Omit("reply_comment_id", "article_id").

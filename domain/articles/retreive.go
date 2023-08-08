@@ -26,7 +26,7 @@ func GetArticle(articleID, userID uint) (*pb.GetArticleResponse, error) {
 		CreatedAt: timestamppb.New(article.CreatedAt),
 		UpdatedAt: timestamppb.New(article.UpdatedAt),
 		Views:     article.Views,
-		Body:      string(article.Body.Text),
+		Body:      string(article.Text),
 		Likes:     uint32(article.Likes),
 		IsPrivate: article.IsPrivate,
 		IsLiked:   article.IsLiked,

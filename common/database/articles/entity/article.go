@@ -29,7 +29,7 @@ type Article struct {
 	Type      ArticleType       `gorm:"type:tinyint"`
 	IsPrivate bool              `gorm:"type:tinyint"`
 	Views     uint64
-	Likes     []*user_entity.User       `gorm:"many2many:user_likes;"`
+	Likes     []*user_entity.User       `gorm:"many2many:user_likes;constraint:OnDelete:CASCADE"`
 	Comments  []*comment_entity.Comment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 

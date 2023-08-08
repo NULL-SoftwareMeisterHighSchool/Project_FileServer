@@ -12,6 +12,7 @@ type ArticlePermissionInfo struct {
 
 type ArticleWithBodyAndLikes struct {
 	article_entity.Article
+	Text     string
 	Likes    uint
 	Comments uint
 	IsLiked  bool
@@ -29,21 +30,18 @@ func GetArticlePermissionInfoByID(id uint) (*ArticlePermissionInfo, error) {
 func GetArticleWithBody(id, userID uint) (*ArticleWithBodyAndLikes, error) {
 	var article ArticleWithBodyAndLikes
 
-	tx := database.Articles().Where("id = ?", id)
-
-	tx = tx.Select("articles.*, (?) AS likes, (?) AS is_liked, (?) AS comments",
-		LikesForArticleQuery().
-			Select("COUNT(*)"),
-		LikesForArticleQuery().
-			Where("user_id = ? AND user_id != 0", userID).
-			Select("COUNT(*) > 0"),
-		database.Comments().
-			Where("article_id = ?", id).
-			Select("COUNT(*)"),
-	)
-
-	tx = tx.Joins("JOIN article_bodies AS bodies ON bodies.article_id = articles.id").
-		Select("bodies.text").
+	tx := database.Articles().Where("id = ?", id).
+		Joins("JOIN article_bodies AS bodies ON bodies.article_id = articles.id").
+		Select("bodies.text as text, articles.*, (?) AS likes, (?) AS is_liked, (?) AS comments",
+			LikesForArticleQuery().
+				Select("COUNT(*)"),
+			LikesForArticleQuery().
+				Where("user_id = ? AND user_id != 0", userID).
+				Select("COUNT(*) > 0"),
+			database.Comments().
+				Where("article_id = ?", id).
+				Select("COUNT(*)"),
+		).
 		Omit("summary", "images").
 		First(&article)
 

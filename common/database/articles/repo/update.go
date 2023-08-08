@@ -66,7 +66,7 @@ func ToggleLike(articleID, userID uint) error {
 		Select("COUNT(*) > 0").Find(&exists)
 
 	if exists {
-		return database.ArticleLikes().Delete(it).Error
+		return database.ArticleLikes().Delete(nil, it).Error
 	} else {
 		return database.ArticleLikes().Create(it).Error
 	}

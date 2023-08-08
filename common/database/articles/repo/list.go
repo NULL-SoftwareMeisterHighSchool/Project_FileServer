@@ -59,12 +59,12 @@ func ListArticles(
 	tx.Count(&recordCnt)
 
 	// select
-	tx = tx.Select("articles.*, (?) AS thumbnail, (?) AS likes,  (?) AS comments, articles.author_id == ? AS is_author",
+	tx = tx.Select("articles.*, (?) AS likes,  (?) AS comments, articles.author_id = ? AS is_author",
 		// thumbnail
-		database.Images().
-			Where("article_id = articles.id").
-			Select("url").
-			Limit(1),
+		// database.Images().
+		// 	Where("article_id = articles.id").
+		// 	Select("url").
+		// 	Limit(1),
 		// likes
 		LikesForArticleQuery().
 			Select("COUNT(*)"),

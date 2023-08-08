@@ -106,7 +106,7 @@ func (ArticleServiceServer) SetArticleVisibility(ctx context.Context, request *p
 }
 
 func (ArticleServiceServer) ToggleArticleLike(ctx context.Context, request *pb.ToggleArticleLikeRequest) (*empty.Empty, error) {
-	if err := articles.DeleteByID(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
+	if err := articles.ToggleArticleLike(uint(request.GetArticleID()), uint(request.GetUserID())); err != nil {
 		return nil, errors.StatusForError(err)
 	}
 
