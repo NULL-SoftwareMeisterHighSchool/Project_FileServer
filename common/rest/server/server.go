@@ -10,6 +10,7 @@ import (
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/middlewares"
 	image_controller "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/rest/server/images"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
@@ -23,6 +24,7 @@ func Listen() {
 	app := fiber.New(appConfig)
 	app.Use(logger.New())
 	app.Use(recover.New())
+	app.Use(cors.New())
 
 	{
 		app.Get("ping", func(c *fiber.Ctx) error {
