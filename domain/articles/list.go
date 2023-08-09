@@ -50,7 +50,8 @@ func ListArticlesByAuthor(
 
 	if userID != authorID {
 		if isPrivate == nil {
-			*isPrivate = false
+			fals := false
+			isPrivate = &fals
 		} else if *isPrivate {
 			return nil, article_errors.ErrPermissionDenied
 		}
