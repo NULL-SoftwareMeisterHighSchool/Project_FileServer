@@ -10,7 +10,7 @@ func CreateArticle(authorID uint, title string, articleType article_entity.Artic
 		SetAuthorID(authorID).
 		SetTitle(title).
 		SetArticleType(articleType).
-		SetIsPrivate(true)
+		SetIsPrivate(false)
 
 	tx := database.Articles().Create(&article)
 	return article.ID, tx.Error
