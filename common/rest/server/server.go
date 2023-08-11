@@ -19,6 +19,7 @@ func Listen() {
 
 	appConfig := fiber.Config{
 		ErrorHandler: errors.CustomErrorHandler,
+		BodyLimit:    25 * 1024 * 1024,
 	}
 
 	app := fiber.New(appConfig)
