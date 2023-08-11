@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
@@ -20,8 +21,9 @@ func GetUserIDFromToken(accessToken string) uint {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("http://%s:3000/users/me/tiny", config.CORE_IP), nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 
+	log.Println(req)
 	resp, err := client.Do(req)
-	if err != nil {
+	if err != nil || resp.StatusCode != http.StatusOK {
 		return 0
 	}
 	defer resp.Body.Close()
@@ -31,6 +33,7 @@ func GetUserIDFromToken(accessToken string) uint {
 	if err != nil {
 		panic(err)
 	}
+	log.Println(data)
 
 	if err = json.Unmarshal(data, result); err != nil {
 		panic(err)
