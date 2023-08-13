@@ -11,6 +11,7 @@ import (
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var db *gorm.DB
@@ -21,7 +22,9 @@ func Connect() {
 		config.DB_USER, config.DB_PASS, config.DB_HOST, config.DB_NAME,
 	)
 
-	d, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	d, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatalf("cannot open db: %s", err)
 	}
