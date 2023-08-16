@@ -80,7 +80,7 @@ func ToggleLike(articleID, userID uint) error {
 }
 
 func getThumbnailFromBody(body []byte) string {
-	urlPattern := fmt.Sprintf(`^(https?)://[^\s/$.?#]+\.(%s)$`, strings.Join(config.IMAGE_EXTENSIONS, "|"))
+	urlPattern := fmt.Sprintf(`(http(s?):)([/|.|\w|\s|-])*\.(?:%s)`, strings.Join(config.IMAGE_EXTENSIONS, "|"))
 	regex := regexp.MustCompile(urlPattern)
 	return string(regex.Find(body))
 }
