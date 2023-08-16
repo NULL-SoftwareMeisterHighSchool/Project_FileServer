@@ -9,14 +9,17 @@ import (
 )
 
 func requestGithubStat(userInfo *pb.UserInfo, c chan<- client.GithubInfo, wg *sync.WaitGroup) {
+	defer wg.Done()
 
-	joinedAt := client.GetUserJoinedAt(userInfo.GetUserLogin())
+	joinedAt, err := client.GetUserJoinedAt(userInfo.GetUserLogin())
+	if err != nil {
+		return
+	}
 	now := time.Now()
 
 	stat := client.GetUserContributionCount(userInfo.GetUserLogin(), joinedAt, now)
 	stat.UserID = uint(userInfo.GetUserID())
 	c <- stat
-	wg.Done()
 }
 
 func getGithubStatStream(userInfoList []*pb.UserInfo) chan client.GithubInfo {

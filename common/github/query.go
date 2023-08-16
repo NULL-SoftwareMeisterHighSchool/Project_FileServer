@@ -2,7 +2,6 @@ package github_client
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/hasura/go-graphql-client"
@@ -80,7 +79,7 @@ loop:
 	return *githubInfo
 }
 
-func GetUserJoinedAt(login string) time.Time {
+func GetUserJoinedAt(login string) (time.Time, error) {
 	client := getClient()
 
 	variables := map[string]interface{}{
@@ -89,10 +88,10 @@ func GetUserJoinedAt(login string) time.Time {
 
 	var query queryGetUserJoinedAt
 	if err := client.Query(context.Background(), &query, variables); err != nil {
-		log.Fatalf("failed to send query: %s", err)
+		return time.Now(), err
 	}
 
-	return query.User.CreatedAt
+	return query.User.CreatedAt, nil
 }
 
 func queryAllGithubStats(client *graphql.Client, variables map[string]interface{}) (*GithubInfo, *pageinfo) {
