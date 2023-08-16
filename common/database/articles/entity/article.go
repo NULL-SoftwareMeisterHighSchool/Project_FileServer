@@ -2,6 +2,7 @@ package article_entity
 
 import (
 	"time"
+	"unicode/utf8"
 
 	comment_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/comments/entity"
 	user_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/users/entity"
@@ -61,7 +62,14 @@ func (a *Article) SetTitle(title string) *Article {
 func (a *Article) SetSummary(body []byte) *Article {
 	plainText := util.SanitizeExceptPlainText(body)
 	minLength := util.GetMin(len(plainText), MAX_SUMMARY_LENGTH)
-	a.Summary = string(plainText[:minLength])
+
+	idx := 0
+	for i := 0; i < minLength; i++ {
+		_, size := utf8.DecodeRune(plainText[idx:])
+		idx += size
+	}
+
+	a.Summary = string(plainText[:idx])
 	return a
 }
 
