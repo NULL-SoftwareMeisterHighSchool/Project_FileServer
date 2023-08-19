@@ -16,6 +16,7 @@ type ArticleType uint8
 const (
 	TYPE_GENERAL ArticleType = iota
 	TYPE_TECH
+	TYPE_INTRODUCE
 )
 
 type Article struct {

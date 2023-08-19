@@ -13,4 +13,5 @@ type ArticleTypeOption uint8
 const (
 	GENERAL ArticleTypeOption = iota
 	TECH
+	INTRODUCE
 )
