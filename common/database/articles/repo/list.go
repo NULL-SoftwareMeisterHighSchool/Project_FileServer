@@ -5,6 +5,7 @@ import (
 
 	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database"
 	article_entity "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/entity"
+	"gorm.io/gorm"
 )
 
 type ListArticleElemWithLikes struct {
@@ -47,12 +48,17 @@ func ListArticles(
 
 	if query != "" {
 		tx = tx.
-			Where("MATCH(title) AGAINST (?)", query).
-			Or("id IN (?)",
-				database.ArticleBodies().
-					Where("MATCH(text) AGAINST (?)", query).
-					Select("article_id"),
-			)
+			Where(tx.Scopes(
+				func(d *gorm.DB) *gorm.DB {
+					return tx.Where("(MATCH(title) AGAINST (?)", query)
+				},
+				func(d *gorm.DB) *gorm.DB {
+					return tx.Or("id IN (?))",
+						database.ArticleBodies().
+							Where("MATCH(text) AGAINST (?)", query).
+							Select("article_id"),
+					)
+				}))
 	}
 
 	// get count
