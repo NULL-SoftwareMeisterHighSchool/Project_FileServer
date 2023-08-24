@@ -29,3 +29,7 @@ var (
 	AWS_ACCESS string
 	AWS_SECRET string
 )
+
+var (
+	ADMIN_ID = 4
+)

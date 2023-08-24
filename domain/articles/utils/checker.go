@@ -3,6 +3,7 @@ package article_utils
 import (
 	"errors"
 
+	"github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/config"
 	article_repo "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/common/database/articles/repo"
 	article_errors "github.com/NULL-SoftwareMeisterHighSchool/Project_FileServer/domain/articles/errors"
 	"gorm.io/gorm"
@@ -14,7 +15,7 @@ func CheckPrivateAndExists(userID, articleID uint) (isAuthor bool, err error) {
 		return false, err
 	}
 
-	isAuthor = pInfo.AuthorID == userID
+	isAuthor = userID == uint(config.ADMIN_ID) || pInfo.AuthorID == userID
 
 	if pInfo.IsPrivate && !isAuthor {
 		return isAuthor, article_errors.ErrPermissionDenied
@@ -28,7 +29,7 @@ func CheckSudoAndExists(userID, articleID uint) error {
 		return err
 	}
 
-	if pInfo.AuthorID != userID {
+	if userID != uint(config.ADMIN_ID) && pInfo.AuthorID != userID {
 		return article_errors.ErrPermissionDenied
 	}
 	return nil
